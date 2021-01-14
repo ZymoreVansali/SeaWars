@@ -17,7 +17,7 @@ import java.util.ArrayList;
  *
  * @author Usuario
  */
-public class ThreadServidor extends Thread implements Serializable{
+public class ThreadServidor extends Thread implements Serializable {
     transient private Socket socketRef;
     protected DataInputStream reader;
     protected DataOutputStream writer;

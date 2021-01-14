@@ -5,7 +5,10 @@
  */
 package servidor;
 
+import Cliente.Cliente;
+import Cliente.InterfazCliente;
 import java.io.Serializable;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,7 +22,26 @@ public class PantallaServidor extends javax.swing.JFrame implements Serializable
      * Creates new form PantallaServidor
      */
     public PantallaServidor() {
+        Servidor srv = new Servidor(this);
+        setTitle("Servidor Sea War");
+        srv.start();
         initComponents();
+    }
+    
+    public void newPlayer(){
+        String nombre = JOptionPane.showInputDialog("Escriba su nombre:");
+        try{
+        InterfazCliente pantalla = new InterfazCliente();
+        Cliente c = new Cliente(pantalla);
+        c.crearPersonajes("");
+        pantalla.pack();
+        pantalla.setVisible(true); 
+        c.conectar(nombre);
+               
+        }
+        catch(Exception e){
+            
+        }
     }
     
      public void setSrv(Servidor srv) {

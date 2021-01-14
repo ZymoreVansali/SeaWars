@@ -6,6 +6,7 @@
 package servidor;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import javax.swing.JOptionPane;
  *
  * @author Usuario
  */
-public class Servidor {
+public class Servidor extends Thread implements Serializable{
     PantallaServidor refPantalla;
     public ArrayList<ThreadServidor> conexiones;            // Las conexiones de los jugadores de la partida al servidor
     private boolean running = true;
