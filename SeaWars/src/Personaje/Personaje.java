@@ -12,8 +12,11 @@ import Ataques.TheTrident;
 import Ataques.Thunder;
 import Ataques.Volcanoes;
 import Ataques.WavesControl;
+import Ficha.Ficha;
+import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
+import javax.swing.JLabel;
 
 /**
  *
@@ -27,6 +30,7 @@ public class Personaje implements Serializable{
     int poder;
     int resistencia;
     int sanidad;
+    ArrayList<Ficha> fichas;
 
     public String getNombre() {
         return nombre;
@@ -101,6 +105,14 @@ public class Personaje implements Serializable{
         this.sanidad = sanidad;
     }
     
-    
+    public void agregarFichas(Color color){
+        int cantidad = porcentaje/100*12000;
+        for(int i = 1; i < cantidad;i++){
+                        Ficha ficha = new Ficha(new JLabel());
+                        ficha.label.setBackground(color);
+                        ficha.label.setSize(10, 10);
+                        fichas.add(ficha);
+        }
+    }
     
 }

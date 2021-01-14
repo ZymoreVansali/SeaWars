@@ -5,17 +5,82 @@
  */
 package Cliente;
 
+import Ficha.Ficha;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Scanner;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import servidor.Servidor;
 
 /**
  *
  * @author Usuario
  */
 public class InterfazCliente extends javax.swing.JFrame {
-     public Cliente refCliente;           // Nombre del jugador cuyo turno es actualmente
+    
+    private Servidor srv;
+    
+    public InterfazCliente() {
+        initComponents();
+        Servidor srv = new Servidor(this);
+        setTitle("Servidor Sea War");
+        srv.start();
+    }
+    public Cliente refCliente;           // Nombre del jugador cuyo turno es actualmente
     private String nombreJugador = "";
-
-
+    
+    public void setSrv(Servidor srv) {
+        this.srv = srv;
+    }
+    
+    
+    public void newPlayer(String nombre){
+        try{
+        Cliente c = new Cliente(this);
+        this.pack();
+        this.setVisible(true); 
+        c.conectar(nombre);
+               
+        }
+        catch(Exception e){
+            
+        }
+    }
+    
+    public void loadPlayer(ThreadCliente jugadorCargado, String nombre){
+        try{
+        Cliente c = new Cliente(this);
+        pack();
+        setVisible(true); 
+        c.conectarLoad(jugadorCargado, nombre);
+        }
+        catch(Exception e){
+            
+        }
+    }
+    
+    public static boolean isNumeric(String strNum) {
+    if (strNum == null) {
+        return false;
+    }
+    try {
+        int i = Integer.parseInt(strNum);
+        float f = Float.parseFloat(strNum);
+        double d = Double.parseDouble(strNum);
+        long l = Long.parseLong(strNum);
+        
+    } catch (NumberFormatException nfe) {
+        return false;
+    }
+    return true;
+}
+    
+    public static void infoBox(String infoMessage, String titleBar)
+    {
+        JOptionPane.showMessageDialog(null, infoMessage, titleBar, JOptionPane.INFORMATION_MESSAGE);
+    }
+    
     public Cliente getRefCliente() {
         return refCliente;
     }
@@ -32,22 +97,13 @@ public class InterfazCliente extends javax.swing.JFrame {
         this.nombreJugador = nombreJugador;
     }
 
-    public JLabel getjLabel1() {
-        return prueba_lbl;
-    }
 
-    public void setjLabel1(JLabel jLabel1) {
-        this.prueba_lbl = jLabel1;
-    }
     /**
      * Creates new form InterfazCliente
      */
-    public InterfazCliente() {
-        initComponents();
-    }
     public void setInicioPartida(){             // Configura la partida con los datos iniciales para empezarla
-        prueba_lbl.setText("Partida Iniciada");
-        prueba_txtArea.setText("Dinero: $" + refCliente.getHiloCliente());
+        commandTextArea.setText("Partida Iniciada");
+        commandTextArea.setText("Dinero: $" + refCliente.getHiloCliente());
       //  lblNumCasas.setText("Numero de casas: " + refCliente.getHiloCliente().getNumCasas());
      //   lblNumHoteles.setText("Numero de hoteles: " + refCliente.getHiloCliente().getNumHoteles());
      //   lblNumPropiedades.setText("Numero de propiedades: " + refCliente.getHiloCliente().getNumPropiedades());
@@ -55,7 +111,7 @@ public class InterfazCliente extends javax.swing.JFrame {
     
     public void addMensaje(String msj)              // Para agregar un mensaje en la interfaz del cliente
     {
-        msmArea.append(msj + "\n");
+        commandTextArea.append(msj + "\n");
     }   
 
     /**
@@ -67,57 +123,61 @@ public class InterfazCliente extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        prueba_lbl = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        prueba_txtArea = new javax.swing.JTextArea();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        msmArea = new javax.swing.JTextArea();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        commandTextArea = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        prueba_lbl.setText("Helllo");
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
-        prueba_txtArea.setColumns(20);
-        prueba_txtArea.setRows(5);
-        jScrollPane1.setViewportView(prueba_txtArea);
-
-        msmArea.setColumns(20);
-        msmArea.setRows(5);
-        jScrollPane2.setViewportView(msmArea);
+        commandTextArea.setColumns(20);
+        commandTextArea.setRows(5);
+        jScrollPane3.setViewportView(commandTextArea);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(289, 289, 289)
-                        .addComponent(prueba_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(259, 259, 259)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(239, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(83, 83, 83))
+                .addGap(269, 269, 269)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 203, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(59, 59, 59))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(prueba_lbl, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(59, 59, 59)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addContainerGap(431, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(25, 25, 25))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+	int row, column;	
+            row = 20;
+            column = 600;
+		for(int i=0; i < row; i++) {
+                    for(int j=0; j < column; j++) {
+                    }
+		}
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    
     /**
      * @param args the command line arguments
      */
@@ -154,10 +214,8 @@ public class InterfazCliente extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea msmArea;
-    private javax.swing.JLabel prueba_lbl;
-    private javax.swing.JTextArea prueba_txtArea;
+    private javax.swing.JTextArea commandTextArea;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JScrollPane jScrollPane3;
     // End of variables declaration//GEN-END:variables
 }

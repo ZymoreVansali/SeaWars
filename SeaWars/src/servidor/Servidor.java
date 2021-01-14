@@ -5,6 +5,7 @@
  */
 package servidor;
 
+import Cliente.InterfazCliente;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.ServerSocket;
@@ -18,7 +19,7 @@ import javax.swing.JOptionPane;
  * @author Usuario
  */
 public class Servidor extends Thread implements Serializable{
-    PantallaServidor refPantalla;
+    InterfazCliente refPantalla;
     public ArrayList<ThreadServidor> conexiones;            // Las conexiones de los jugadores de la partida al servidor
     private boolean running = true;
     transient private ServerSocket srv;
@@ -33,7 +34,7 @@ public class Servidor extends Thread implements Serializable{
     private ArrayList<String> nombreOrder;
     private ArrayList<String> listaPerdedores;
 
-    public Servidor(PantallaServidor refPantalla) {
+    public Servidor(InterfazCliente refPantalla) {
         this.refPantalla = refPantalla;
         conexiones = new ArrayList<ThreadServidor>();
         this.refPantalla.setSrv(this);
@@ -41,7 +42,7 @@ public class Servidor extends Thread implements Serializable{
         this.listaPerdedores = new ArrayList<String>();
     }
     
-    public Servidor(PantallaServidor refPantalla, int turnoCargado, int limiteMaxCargado, Servidor servidorCargado) {
+    public Servidor(InterfazCliente refPantalla, int turnoCargado, int limiteMaxCargado, Servidor servidorCargado) {
         this.refPantalla = refPantalla;
         conexiones = new ArrayList<ThreadServidor>();
         this.refPantalla.setSrv(this);
@@ -90,7 +91,7 @@ public class Servidor extends Thread implements Serializable{
     
     public void iniciarPartida() {          // Se empieza la partida
         this.partidaIniciada = true;
-        refPantalla.addMessage("-Partida iniciada.");
+        refPantalla.addMensaje("-Partida iniciada.");
     }
     
     public void guardarPartida() throws IOException {          // Para guardar la partida actual con serializable
@@ -103,7 +104,7 @@ public class Servidor extends Thread implements Serializable{
     
     public void signalIniciarPartida() throws IOException{
         this.partidaIniciada = true;
-        refPantalla.addMessage("-Partida iniciada.");
+        refPantalla.addMensaje("-Partida iniciada.");
         
         for (int i = 0; i < conexiones.size(); i++) {
             ThreadServidor current = conexiones.get(i);
@@ -242,8 +243,8 @@ public class Servidor extends Thread implements Serializable{
             srv = new ServerSocket(35577);
             while (running){
                 if (contadorDeConexiones <= this.getLimiteMax() && this.isMaximoAlcanzado() == false){          // Mientras no se ha llegado al límmite maximo, se aceptan conexiones nuevas
-                    refPantalla.addMessage("-Esperando más jugadores...");
-                    refPantalla.addMessage("-El límite máximo de jugadores para esta partida es " + cantidadJugadores + ". Cantidad actual de jugadores: " + contadorDeConexiones);
+                    refPantalla.addMensaje("-Esperando más jugadores...");
+                    refPantalla.addMensaje("-El límite máximo de jugadores para esta partida es " + cantidadJugadores + ". Cantidad actual de jugadores: " + contadorDeConexiones);
                     
                 }
                     
@@ -252,14 +253,14 @@ public class Servidor extends Thread implements Serializable{
                     contadorDeConexiones++;
 
                     if (contadorDeConexiones > this.getLimiteMax()){
-                        refPantalla.addMessage("-Conexión denegada: Límite máximo de jugadores alcanzado.");
+                        refPantalla.addMensaje("-Conexión denegada: Límite máximo de jugadores alcanzado.");
                         
                         
                     }
                     
                     else if (contadorDeConexiones <= this.getLimiteMax()){
                         
-                        refPantalla.addMessage("-Conexión " + contadorDeConexiones + " aceptada.");
+                        refPantalla.addMensaje("-Conexión " + contadorDeConexiones + " aceptada.");
                         
                         // nuevo thread
                         ThreadServidor newThread = new ThreadServidor(nuevaConexion, this);
@@ -270,9 +271,9 @@ public class Servidor extends Thread implements Serializable{
                         
                         if (contadorDeConexiones == this.getLimiteMax()){           // Al llegar al límite máximo de jugadores, se para de aceptar nuevas conexiones y se empiza la partida
                             
-                            refPantalla.addMessage("-El límite máximo de jugadores para esta partida es " + limiteMax + ". Cantidad actual de jugadores: " + contadorDeConexiones);
-                            refPantalla.addMessage("-Cantidad máxima de jugadores alcanzada. No se permitirán más conexiones.");
-                            refPantalla.addMessage("-Iniciando partida...");
+                            refPantalla.addMensaje("-El límite máximo de jugadores para esta partida es " + limiteMax + ". Cantidad actual de jugadores: " + contadorDeConexiones);
+                            refPantalla.addMensaje("-Cantidad máxima de jugadores alcanzada. No se permitirán más conexiones.");
+                            refPantalla.addMensaje("-Iniciando partida...");
                             this.setMaximoAlcanzado(true);
                             srv.close();
                             this.signalIniciarPartida();
@@ -282,7 +283,7 @@ public class Servidor extends Thread implements Serializable{
                 }
                 else{
                     // OutputStream socket para poder hacer un writer
-                    refPantalla.addMessage("-Conexión denegada: partida iniciada");
+                    refPantalla.addMensaje("-Conexión denegada: partida iniciada");
                     
                 }
                 
@@ -298,11 +299,11 @@ public class Servidor extends Thread implements Serializable{
         }
     }
 
-    public PantallaServidor getRefPantalla() {
+    public InterfazCliente getRefPantalla() {
         return refPantalla;
     }
 
-    public void setRefPantalla(PantallaServidor refPantalla) {
+    public void setRefPantalla(InterfazCliente refPantalla) {
         this.refPantalla = refPantalla;
     }
 

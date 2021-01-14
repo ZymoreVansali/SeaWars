@@ -122,12 +122,7 @@ public class ThreadCliente extends Thread implements Serializable{
                         refPantalla.addMensaje(usuario+ ":   " + mensaje);
                     break;
                     case 3: // pasan un mensaje por el chat
-                        usuario = reader.readUTF();
-                        int dado1 = reader.readInt();
-                        int dado2 = reader.readInt();
-                        String turno = reader.readUTF();
-                        
-                        
+                        usuario = reader.readUTF();   
                     break;                    
                     case 4: // Se inicia la partida
                         refPantalla.setInicioPartida();

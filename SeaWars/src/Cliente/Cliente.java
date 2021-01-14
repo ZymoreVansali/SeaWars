@@ -7,6 +7,7 @@ import Ataques.Thunder;
 import Ataques.Volcanoes;
 import Ataques.WavesControl;
 import Personaje.Personaje;
+import java.awt.Color;
 import servidor.FileManager;
 import java.io.IOException;
 import java.io.Serializable;
@@ -50,7 +51,7 @@ public class Cliente implements Serializable{
             socketRef = new Socket("localhost", 35577);
             hiloCliente = new ThreadCliente(socketRef, refPantalla);
             hiloCliente.start();
-            refPantalla.setTitle("Monopoly - Nombre del jugador: " + nombre);       // Se pone el titulo de la ventana del jugador
+            refPantalla.setTitle("Sea war- Nombre del jugador: " + nombre);       // Se pone el titulo de la ventana del jugador
             refPantalla.setNombreJugador(nombre);    // Se pone el nombre del jugador
             hiloCliente.setNombre(nombre);
             Integer numJugador = (Integer)FileManager.readObject("src/Partida/numjugador.dat");
@@ -330,7 +331,10 @@ public class Cliente implements Serializable{
     
     private boolean validarCreacion(String[] texto){
         boolean flag = true;
-        if(texto.length < 7){
+        if(personajes.size() == 3){
+            return false;
+        }
+        else if(texto.length < 7){
             return false;
         }     
         else if(!validarPoderes(texto)){
@@ -359,6 +363,14 @@ public class Cliente implements Serializable{
         nuevo.setSanidad(Integer.parseInt(separado[4]));
         nuevo.setAtaque(separado[5]);
         nuevo.setPorcentaje(Integer.parseInt(separado[6]));
+        
+        if(personajes.size() == 1)
+            nuevo.agregarFichas(Color.ORANGE);
+        else if(personajes.size() == 2)
+            nuevo.agregarFichas(Color.BLUE);
+        else
+            nuevo.agregarFichas(Color.BLACK);
+        personajes.add(nuevo);
 
 
         return "Personaje creado correctamente";
