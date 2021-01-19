@@ -23,14 +23,14 @@ import javax.swing.JLabel;
  * @author Usuario
  */
 public class Personaje implements Serializable{
-    String nombre;
-    String imagen;
-    int porcentaje;
-    Ataques ataque;
-    int poder;
-    int resistencia;
-    int sanidad;
-    ArrayList<Ficha> fichas;
+    private String nombre;
+    private String imagen;
+    private int porcentaje;
+    private Ataques ataque;
+    private int poder;
+    private int resistencia;
+    private int sanidad;
+    public ArrayList<Ficha> fichas;
 
     public String getNombre() {
         return nombre;
@@ -110,7 +110,6 @@ public class Personaje implements Serializable{
         for(int i = 1; i < cantidad;i++){
                         Ficha ficha = new Ficha(new JLabel());
                         ficha.label.setBackground(color);
-                        ficha.label.setSize(10, 10);
                         fichas.add(ficha);
         }
     }

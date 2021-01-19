@@ -42,6 +42,7 @@ public class Cliente implements Serializable{
     public Cliente(InterfazCliente refPantalla) {
         this.refPantalla = refPantalla;
         refPantalla.setRefCliente(this);
+        this.personajes = new ArrayList<Personaje>();
     }
     
     public void conectar(String nombre){     // Para conectarse al servidor
@@ -330,23 +331,21 @@ public class Cliente implements Serializable{
     }
     
     private boolean validarCreacion(String[] texto){
-        boolean flag = true;
         if(personajes.size() == 3){
             return false;
         }
         else if(texto.length < 7){
             return false;
         }     
-        else if(!validarPoderes(texto)){
+        else if(validarPoderes(texto) != true){
             return false;
         }
-        else if(!validarPorcentajes(texto[6])){
+        else if(validarPorcentajes(texto[6])!= true){
             return false;
         }
-        else if(!validarAtaque(texto[5])){
+        else if(validarAtaque(texto[5])!= true){
             return false;
         }
-        
         return true;
     }
     

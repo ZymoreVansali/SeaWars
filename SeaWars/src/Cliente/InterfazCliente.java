@@ -6,7 +6,9 @@
 package Cliente;
 
 import Ficha.Ficha;
+import Personaje.Personaje;
 import java.awt.Color;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.JLabel;
@@ -20,15 +22,21 @@ import servidor.Servidor;
 public class InterfazCliente extends javax.swing.JFrame {
     
     private Servidor srv;
+    private ArrayList<JLabel> labels;
     
     public InterfazCliente() {
         initComponents();
+        
+    }
+    public Cliente refCliente;           // Nombre del jugador cuyo turno es actualmente
+    private String nombreJugador = "";
+    
+    
+    public void newServer(){
         Servidor srv = new Servidor(this);
         setTitle("Servidor Sea War");
         srv.start();
     }
-    public Cliente refCliente;           // Nombre del jugador cuyo turno es actualmente
-    private String nombreJugador = "";
     
     public void setSrv(Servidor srv) {
         this.srv = srv;
@@ -96,14 +104,41 @@ public class InterfazCliente extends javax.swing.JFrame {
     public void setNombreJugador(String nombreJugador) {
         this.nombreJugador = nombreJugador;
     }
-
+    
+    private void agregarLbl(){
+        int row, column, cont;	
+            row = 21;
+            column = 601;
+            cont = 0;
+		for(int i=1; i < row; i++) {
+                    for(int j=1; j < column; j++) {
+                        labels.get(cont).setBounds(i*10, j*10, 10, 10);
+                        System.out.println("i= "+j);
+                        labels.get(cont).setVisible(true);
+                        System.out.println("i= "+j);
+                        cont++;
+                    }
+    }
+    }
+    
+    public void crearPantalla(){
+        
+        for(int i=0; i < refCliente.personajes.size(); i++) {
+            Personaje personaje = refCliente.personajes.get(i);
+            for(int j=0; j < personaje.getPorcentaje()/100*12000; j++) {
+                JLabel lbl = personaje.fichas.get(j).label;
+                labels.add(lbl);
+            }
+        }
+        agregarLbl();
+    }
+                                                                                                                            
 
     /**
      * Creates new form InterfazCliente
      */
     public void setInicioPartida(){             // Configura la partida con los datos iniciales para empezarla
         commandTextArea.setText("Partida Iniciada");
-        commandTextArea.setText("Dinero: $" + refCliente.getHiloCliente());
       //  lblNumCasas.setText("Numero de casas: " + refCliente.getHiloCliente().getNumCasas());
      //   lblNumHoteles.setText("Numero de hoteles: " + refCliente.getHiloCliente().getNumHoteles());
      //   lblNumPropiedades.setText("Numero de propiedades: " + refCliente.getHiloCliente().getNumPropiedades());
@@ -126,6 +161,13 @@ public class InterfazCliente extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         commandTextArea = new javax.swing.JTextArea();
+        jButton2 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        textArea2 = new javax.swing.JTextArea();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        panelLabels = new javax.swing.JPanel();
+        jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -140,42 +182,132 @@ public class InterfazCliente extends javax.swing.JFrame {
         commandTextArea.setRows(5);
         jScrollPane3.setViewportView(commandTextArea);
 
+        jButton2.setText("jButton2");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        textArea2.setColumns(20);
+        textArea2.setRows(5);
+        jScrollPane1.setViewportView(textArea2);
+
+        jButton3.setText("jButton3");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("jButton4");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelLabelsLayout = new javax.swing.GroupLayout(panelLabels);
+        panelLabels.setLayout(panelLabelsLayout);
+        panelLabelsLayout.setHorizontalGroup(
+            panelLabelsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 871, Short.MAX_VALUE)
+        );
+        panelLabelsLayout.setVerticalGroup(
+            panelLabelsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+
+        jButton5.setText("jButton5");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(269, 269, 269)
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(66, 66, 66)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 203, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(59, 59, 59))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(21, 21, 21))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addComponent(panelLabels, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(178, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(431, Short.MAX_VALUE)
+                .addGap(19, 19, 19)
+                .addComponent(panelLabels, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(66, 66, 66)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton5)
+                                .addGap(5, 5, 5)
+                                .addComponent(jButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton4)))
+                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(25, 25, 25))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-	int row, column;	
-            row = 20;
-            column = 600;
-		for(int i=0; i < row; i++) {
-                    for(int j=0; j < column; j++) {
-                    }
-		}
+        this.newPlayer(commandTextArea.getText());
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        try {
+            // TODO add your handling code here:
+            refCliente.hiloCliente.writer.writeInt(2);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
+            refCliente.hiloCliente.writer.writeUTF(refCliente.hiloCliente.getNombre());
+            refCliente.hiloCliente.writer.writeUTF(commandTextArea.getText());
+        } catch (IOException ex) {
+
+        }
+        this.textArea2.setText("");
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        this.newServer();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        crearPantalla();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        refCliente.crearPersonajes("Zeus-1-100-100-100-Kraken-50");
+        refCliente.crearPersonajes("Zeus-2-100-100-100-Kraken-25");
+        refCliente.crearPersonajes("Zeus-3-100-100-100-Kraken-25");
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     
     /**
@@ -216,6 +348,13 @@ public class InterfazCliente extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea commandTextArea;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JPanel panelLabels;
+    private javax.swing.JTextArea textArea2;
     // End of variables declaration//GEN-END:variables
 }
