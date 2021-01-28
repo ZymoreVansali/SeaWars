@@ -62,22 +62,22 @@ public class Personaje implements Serializable{
 
     public void setAtaque(String ataque) {
         if("FishTelephaty".equals(ataque)){
-            this.ataque = new FishTelephaty("Fish Telephaty");
+            this.ataque = new FishTelephaty("FishTelephaty");
         }
         else if("Kraken".equals(ataque)){
             this.ataque = new Kraken("Kraken");
         }
         else if("TheTrident".equals(ataque)){
-            this.ataque = new TheTrident("The Trident");
+            this.ataque = new TheTrident("TheTrident");
         }
         else if("Thunder".equals(ataque)){
-            this.ataque = new Thunder("The Thunder");
+            this.ataque = new Thunder("TheThunder");
         }
         else if("Volcanoes".equals(ataque)){
             this.ataque = new Volcanoes("Volcanoes");
         }
         else if("WavesControl".equals(ataque)){
-            this.ataque = new WavesControl("Waves Control");
+            this.ataque = new WavesControl("WavesControl");
         }
     }
 
@@ -111,10 +111,10 @@ public class Personaje implements Serializable{
     
     
     public void verificarVivo(){
+        String msm = "";
         for(int i = 0;i <fichas.size();i++){  
-            String msm = fichas.get(i).getText();
-            System.out.println(msm);
-            if(Integer.parseInt(msm) > 0){ 
+            msm = fichas.get(i).getText();
+            if("0".equals(msm) == false){ 
                 return;
             }
         }

@@ -140,8 +140,10 @@ public class InterfazCliente extends javax.swing.JFrame {
     private void agregarLbl(){
         int y = 0;
         JLabel [][] labelMatrix = new JLabel[20][30];
+        System.out.println(labelMatrix.length);
         for(int i = 0; i < labelMatrix.length; i++){
             int x = 0;
+            System.out.println(labelMatrix[i].length);
             for(int j = 0; j < labelMatrix[i].length; j++){
                 labelMatrix[i][j] = new javax.swing.JLabel();
                 labelMatrix[i][j].setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
@@ -193,7 +195,13 @@ public class InterfazCliente extends javax.swing.JFrame {
         }
         return true;
     }                                                                                                  
-
+    
+    public void imprimirTodo(ArrayList<JLabel> lbls){
+        for(int i = 0;i < lbls.size();i++){
+            System.out.println(lbls.get(i) + " tiene vida de: "+lbls.get(i).getText()+" posi "+i);
+        }
+    }
+    
     /**
      * Creates new form InterfazCliente
      */
@@ -244,6 +252,44 @@ public class InterfazCliente extends javax.swing.JFrame {
                     if("threeLines".equals(separado[2]) || "threeNumbers".equals(separado[2]) || "controlTheKraken".equals(separado[2])) {
                         
                             refCliente.hiloCliente.writer.writeInt(7);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
+                            refCliente.hiloCliente.writer.writeUTF(separado[3]);
+                            refCliente.hiloCliente.writer.writeUTF(lblNombreJugador.getText());
+                            refCliente.hiloCliente.writer.writeUTF(separado[2]);
+                            return "Ataque realizado con exito";
+                    }
+                }
+                else{
+                    return "Usted no tiene al personaje del The trident";
+                }
+            }
+            else if("FishTelephaty".equals(separado[1])){
+                for(int i =0; i < 3; i++){
+                    if("FishTelephaty".equals(refCliente.personajes.get(i).ataque.getNombre()))
+                        flag = true;
+                }
+                if(flag){
+                    if("cardumen".equals(separado[2]) || "sharkAttack".equals(separado[2]) || "pulp".equals(separado[2])) {
+                        
+                            refCliente.hiloCliente.writer.writeInt(8);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
+                            refCliente.hiloCliente.writer.writeUTF(separado[3]);
+                            refCliente.hiloCliente.writer.writeUTF(lblNombreJugador.getText());
+                            refCliente.hiloCliente.writer.writeUTF(separado[2]);
+                            return "Ataque realizado con exito";
+                    }
+                }
+                else{
+                    return "Usted no tiene al personaje del The trident";
+                }
+            }
+            else if("Volcanoes".equals(separado[1])){
+                for(int i =0; i < 3; i++){
+                    if("Volcanoes".equals(refCliente.personajes.get(i).ataque.getNombre()))
+                        flag = true;
+                }
+                if(flag){
+                    if("volcanoRaising".equals(separado[2]) || "volcanoExplotion".equals(separado[2]) || "thermalRush".equals(separado[2])) {
+                        
+                            refCliente.hiloCliente.writer.writeInt(9);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
                             refCliente.hiloCliente.writer.writeUTF(separado[3]);
                             refCliente.hiloCliente.writer.writeUTF(lblNombreJugador.getText());
                             refCliente.hiloCliente.writer.writeUTF(separado[2]);
@@ -447,8 +493,8 @@ public class InterfazCliente extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         String i = "crearPersonaje-Zeus-1-100-100-100-Kraken-35";
-        String d = "crearPersonaje-Zeus-1-75-75-75-TheTrident-46";
-        String f = "crearPersonaje-Zeus-1-50-50-50-Kraken-19";
+        String d = "crearPersonaje-Zeus-1-75-75-75-Volcanoes-46";
+        String f = "crearPersonaje-Zeus-1-50-50-50-FishTelephaty-19";
         String[] a = i.split("-");
         String[] b = d.split("-");
         String[] c = f.split("-");
@@ -470,91 +516,86 @@ public class InterfazCliente extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(evt.getKeyCode() == KeyEvent.VK_ENTER){
             this.vivo = verificarVivo();
-            if(this.vivo){
-                String command = commandTextField.getText();
-                String[] separado = command.split("-");// Crear Personajes
-                System.out.println(separado[0]);
-                if(null == separado[0]){
-                    addMensaje("Error, el comando ingresado es inexistente");
-                }
-                else switch (separado[0]) {
-                    case "crearPersonaje":
-                        addMensaje(refCliente.crearPersonajes(separado));
-                        break;
-                    case "crearServidor":
-                        // Iniciar Servidor
-                        if(separado.length == 2){
-                            addMensaje(this.newServer(separado[1]));
-                        }
-                        else{
-                            addMensaje("El comando no esta ingresado correctamente.");
-                        }
-                        break;
-                    case "nuevaConexion":
-                        if(separado.length == 2){
-                            String nombre = separado[1];
-                            this.newPlayer(nombre);
-                            lblNombreJugador.setText(nombre);
-                        }
-                        else{
-                            addMensaje("El comando no esta ingresado correctamente.");
-                        }
-                        break;
-                    case "chatGeneral":
-                        // Chat general
-                        try {
+            
+            String command = commandTextField.getText();
+            String[] separado = command.split("-");// Crear Personajes        ataque-Kraken-tentacles-davi
+            if(null == separado[0]){
+                addMensaje("Error, el comando ingresado es inexistente");
+            }
+            else switch (separado[0]) {
+                case "crearPersonaje":
+                    addMensaje(refCliente.crearPersonajes(separado));
+                    break;
+                case "crearServidor":
+                    // Iniciar Servidor
+                    if(separado.length == 2){
+                        addMensaje(this.newServer(separado[1]));
+                    }
+                    else{
+                        addMensaje("El comando no esta ingresado correctamente.");
+                    }
+                    break;
+                case "nuevaConexion":
+                    if(separado.length == 2){
+                        String nombre = separado[1];
+                        this.newPlayer(nombre);
+                        lblNombreJugador.setText(nombre);
+                    }
+                    else{
+                        addMensaje("El comando no esta ingresado correctamente.");
+                    }
+                    break;
+                case "chatGeneral":
+                    // Chat general
+                    try {
 
+                        // TODO add your handling code here:
+                        refCliente.hiloCliente.writer.writeInt(2);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
+                        refCliente.hiloCliente.writer.writeUTF(lblNombreJugador.getText());
+                        refCliente.hiloCliente.writer.writeUTF(separado[1]);
+                    } catch (IOException ex) {
+
+                    }   break;
+                case "chatPrivado":
+                    if(separado.length == 3){
+                        try {
                             // TODO add your handling code here:
-                            refCliente.hiloCliente.writer.writeInt(2);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
+                            refCliente.hiloCliente.writer.writeInt(3);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
                             refCliente.hiloCliente.writer.writeUTF(lblNombreJugador.getText());
                             refCliente.hiloCliente.writer.writeUTF(separado[1]);
+                            refCliente.hiloCliente.writer.writeUTF(separado[2]);
                         } catch (IOException ex) {
 
-                        }   break;
-                    case "chatPrivado":
-                        if(separado.length == 3){
-                            try {
-                                // TODO add your handling code here:
-                                refCliente.hiloCliente.writer.writeInt(3);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
-                                refCliente.hiloCliente.writer.writeUTF(lblNombreJugador.getText());
-                                refCliente.hiloCliente.writer.writeUTF(separado[1]);
-                                refCliente.hiloCliente.writer.writeUTF(separado[2]);
-                            } catch (IOException ex) {
-
-                            }
                         }
-                        else{
-                            addMensaje("Ha ocurrido un error con el envio del mensaje");
-                        }   break;
-                    case "ataque":
-                        {
+                    }
+                    else{
+                        addMensaje("Ha ocurrido un error con el envio del mensaje");
+                    }   break;
+                case "ataque":
+                    if(this.vivo){
                         try {
-                            
+
                             addMensaje(atacar(separado));
                         } catch (IOException ex) {
                             Logger.getLogger(InterfazCliente.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                     break;   
                     }
-                    default:
-                        addMensaje("Error, el comando ingresado es inexistente");
-                        break;
+                    else{
+                        addMensaje("Usted esta muerto, buena suerte en la proxima");
+                    }
+                 break;   
+                default:
+                    addMensaje("Error, el comando ingresado es inexistente");
+                    break;             
                 }
-                commandTextField.setText("");
-                
-                
-            }
-            else{
-                addMensaje("Usted esta muerto, buena suerte en la proxima");
-            }
-            
+                commandTextField.setText(""); 
         }
     }//GEN-LAST:event_commandTextFieldKeyPressed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             // TODO add your handling code here:
-            String command = "ataque-TheTrident-threeLines-fer";
+            String command = "ataque-Volcanoes-volcanoExplotion-fer";
             String[] separado = command.split("-");// Crear Personajes
             addMensaje(atacar(separado));
         } catch (IOException ex) {
@@ -564,7 +605,9 @@ public class InterfazCliente extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        
+        for(int i = 0;i < labels.size();i++){
+            System.out.println(labels.get(i) + " tiene vida de: "+labels.get(i).getText()+" posi "+i);
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     

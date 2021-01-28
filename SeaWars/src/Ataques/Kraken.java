@@ -32,49 +32,48 @@ public class Kraken extends Ataques{
         JLabel[][] labelMatrix = refPantalla.labelMatrix;
         Icon rojo = new ImageIcon(getClass().getResource("/Imagenes/rojo.png"));
         int cont = 0;
+        refPantalla.imprimirTodo(fichas);
         for(int i =0; i < 3; i++){
             for(int j = 0;j < 20;j++){
                 for(int c = 0+cont;c < 30;c++){
                     if(labelMatrix[posX.get(j)][posY.get(c)].getIcon() != rojo && cont < 3){
                         int x = posX.get(j);
                         int y = posY.get(c);
-                        System.out.println("x: " + x);
-                        System.out.println("y: " + y);
                         if( x >= 0&& x+1 < 20 && y >= 0 && y+1 < 30){
                             labelMatrix[x+1][y+1].setIcon(rojo);
-                            dannarFichas(fichas, labelMatrix[x+1][y+1], 100);
+                            dannarFichas(refPantalla, labelMatrix[x+1][y+1], 100);
                         }
                         if( x >= 0&& x < 20 && y >= 0 && y+1 < 30){
                             labelMatrix[x][y+1].setIcon(rojo);
-                            dannarFichas(fichas, labelMatrix[x][y+1], 100);
+                            dannarFichas(refPantalla, labelMatrix[x][y+1], 100);
                         }
                         if( x-1 >= 0&& x < 20 && y >= 0 && y+1 < 30){
                             labelMatrix[x-1][y+1].setIcon(rojo);
-                            dannarFichas(fichas, labelMatrix[x-1][y+1], 100);
+                            dannarFichas(refPantalla, labelMatrix[x-1][y+1], 100);
                         }
                         if( x-1 >= 0&& x < 20 && y >= 0 && y < 30){
                             labelMatrix[x-1][y].setIcon(rojo);
-                            dannarFichas(fichas, labelMatrix[x-1][y], 100);
+                            dannarFichas(refPantalla, labelMatrix[x-1][y], 100);
                         }
                         if( x-1 >= 0&& x < 20 && y-1 >= 0 && y < 30){
                             labelMatrix[x-1][y-1].setIcon(rojo);
-                            dannarFichas(fichas, labelMatrix[x-1][y-1], 100);
+                            dannarFichas(refPantalla, labelMatrix[x-1][y-1], 100);
                         }
                         if( x >= 0&& x < 20 && y-1 >= 0 && y < 30){
                             labelMatrix[x][y-1].setIcon(rojo);
-                            dannarFichas(fichas, labelMatrix[x][y-1], 100);
+                            dannarFichas(refPantalla, labelMatrix[x][y-1], 100);
                         }
                         if( x >= 0&& x+1 < 20 && y-1 >= 0 && y < 30){
                             labelMatrix[x+1][y-1].setIcon(rojo);
-                            dannarFichas(fichas, labelMatrix[x+1][y-1], 100);
+                            dannarFichas(refPantalla, labelMatrix[x+1][y-1], 100);
                         }
                         if( x >= 0&& x+1 < 20 && y >= 0 && y < 30){
                             labelMatrix[x+1][y].setIcon(rojo);
-                            dannarFichas(fichas, labelMatrix[x+1][y], 100);
+                            dannarFichas(refPantalla, labelMatrix[x+1][y], 100);
                         }
                         if( x >= 0&& x < 20 && y >= 0 && y < 30){
                             labelMatrix[x][y].setIcon(rojo);
-                            dannarFichas(fichas, labelMatrix[x][y], 100);
+                            dannarFichas(refPantalla, labelMatrix[x][y], 100);
                         }
                         cont++;
                         
@@ -101,7 +100,7 @@ public class Kraken extends Ataques{
                    y -= 1;
                    if( x >= 0&& x < 20 && y >= 0 && y < 30){
                     labelMatrix[x][y].setIcon(rojo);
-                    dannarFichas(fichas, labelMatrix[x][y], 100);
+                    dannarFichas(refPantalla, labelMatrix[x][y], 100);
                    }
                }
                break;
@@ -110,7 +109,7 @@ public class Kraken extends Ataques{
                    y += 1;
                    if( x >= 0&& x < 20 && y >= 0 && y < 30){
                     labelMatrix[x][y].setIcon(rojo);
-                    dannarFichas(fichas, labelMatrix[x][y], 100);
+                    dannarFichas(refPantalla, labelMatrix[x][y], 100);
                    }
                }
                break;
@@ -119,7 +118,7 @@ public class Kraken extends Ataques{
                    x += 1;
                    if( x >= 0&& x < 20 && y >= 0 && y < 30){
                     labelMatrix[x][y].setIcon(rojo);
-                    dannarFichas(fichas, labelMatrix[x][y], 100);
+                    dannarFichas(refPantalla, labelMatrix[x][y], 100);
                    }
                }
                break;
@@ -128,7 +127,7 @@ public class Kraken extends Ataques{
                    x -= 1;
                    if( x >= 0&& x < 20 && y >=0 && y < 30){
                     labelMatrix[x][y].setIcon(rojo);
-                    dannarFichas(fichas, labelMatrix[x][y], 100);
+                    dannarFichas(refPantalla, labelMatrix[x][y], 100);
                    }
                }
                break;
@@ -141,7 +140,7 @@ public class Kraken extends Ataques{
     public void releaseTheKraken(ArrayList<JLabel> fichas, InterfazCliente refPantalla){
        Random random = new Random();
         int x = random.nextInt(20),y = random.nextInt(30);
-        if(x == 30)
+        if(x == 20)
             x--;
         if(y==30)
             y--;
@@ -155,41 +154,41 @@ public class Kraken extends Ataques{
             y1 = y;
             y2 = y;
             labelMatrix[x][y].setIcon(rojo);
-            dannarFichas(fichas, labelMatrix[x][y], 100);
+            dannarFichas(refPantalla, labelMatrix[x][y], 100);
             if( x1 >= 0&& x1 < 20 && y >= 0 && y < 30){
                 labelMatrix[x1][y].setIcon(rojo);
-                dannarFichas(fichas, labelMatrix[x1][y], 100);
+                dannarFichas(refPantalla, labelMatrix[x1][y], 100);
                }
             if( x2 >= 0&& x2 < 20 && y >=0 && y < 30){
                 labelMatrix[x2][y].setIcon(rojo);
-                dannarFichas(fichas, labelMatrix[x2][y], 100);
+                dannarFichas(refPantalla, labelMatrix[x2][y], 100);
                }
             for(int j = 1; j <= cant;j++){
                 y1 -= 1;
                 if( x >= 0&& x < 20 && y1 >= 0 && y1 < 30){
                     labelMatrix[x][y1].setIcon(rojo);
-                    dannarFichas(fichas, labelMatrix[x][y1], 100);
+                    dannarFichas(refPantalla, labelMatrix[x][y1], 100);
                 }
                 if( x1 >= 0&& x1 < 20 && y1 >= 0 && y1 < 30){
                     labelMatrix[x1][y1].setIcon(rojo);
-                    dannarFichas(fichas, labelMatrix[x1][y1], 100);
+                    dannarFichas(refPantalla, labelMatrix[x1][y1], 100);
                 }
                 if( x2 >= 0&& x2 < 20 && y1 >= 0 && y1 < 30){
                     labelMatrix[x2][y1].setIcon(rojo);
-                    dannarFichas(fichas, labelMatrix[x2][y1], 100);
+                    dannarFichas(refPantalla, labelMatrix[x2][y1], 100);
                 }
                 y2 += 1;
                 if( x1 >= 0&& x1 < 20 && y2 >= 0 && y2 < 30){
                     labelMatrix[x1][y2].setIcon(rojo);
-                    dannarFichas(fichas, labelMatrix[x1][y2], 100);
+                    dannarFichas(refPantalla, labelMatrix[x1][y2], 100);
                 }
                 if( x1 >= 0&& x1 < 20 && y2 >= 0 && y2 < 30){
                     labelMatrix[x][y2].setIcon(rojo);
-                    dannarFichas(fichas, labelMatrix[x][y2], 100);
+                    dannarFichas(refPantalla, labelMatrix[x][y2], 100);
                 }
                 if( x2 >= 0&& x2 < 20 && y2 >= 0 && y2 < 30){
                     labelMatrix[x2][y2].setIcon(rojo);
-                    dannarFichas(fichas, labelMatrix[x2][y2], 100);
+                    dannarFichas(refPantalla, labelMatrix[x2][y2], 100);
                 }
             }
         }

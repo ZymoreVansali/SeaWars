@@ -8,6 +8,7 @@ import Ataques.Volcanoes;
 import Ataques.WavesControl;
 import Personaje.Personaje;
 import java.awt.Color;
+import java.awt.Point;
 import servidor.FileManager;
 import java.io.IOException;
 import java.io.Serializable;
@@ -27,6 +28,9 @@ public class Cliente implements Serializable{
     ArrayList<Personaje> personajes;
     public ArrayList<JLabel> fichas = new ArrayList<>();
     public boolean vivo = true;
+    public boolean controlKraken = false;
+    public ArrayList<Point> volcanoes = new ArrayList<>();
+    public ArrayList<Integer> cant = new ArrayList<>();
 
     public Socket getSocketRef() {
         return socketRef;
@@ -375,11 +379,11 @@ public class Cliente implements Serializable{
     public void verificarVivo(){
         for(int i = 0;i <personajes.size();i++){
             personajes.get(i).verificarVivo();
-            System.out.println(i+ " per "+ personajes.get(i).vivo);
             if(personajes.get(i).vivo){ 
                 return;
             }
         }
+        
         this.vivo = false;
     }
     

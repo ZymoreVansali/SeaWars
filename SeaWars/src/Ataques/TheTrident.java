@@ -27,13 +27,15 @@ public class TheTrident extends Ataques{
         Random random = new Random();
         Stack < Integer > posX = aleatorio(20);
         Stack < Integer > posY = aleatorio(30);
-        int lado = random.nextInt(3);
+        
         JLabel[][] labelMatrix = refPantalla.labelMatrix;
         Icon rojo = new ImageIcon(getClass().getResource("/Imagenes/rojo.png"));
         int cont = 0;
-        int cantidad = random.nextInt(7)+1;
+        int cantidad = random.nextInt(3)+1;
         for(int i =0; i < 3; i++){
+            
             for(int j = 0;j < 20;j++){
+                int lado = random.nextInt(3);
                 for(int c = 0+cont;c < 30;c++){
                     int x = posX.get(j);
                     int y = posY.get(c);
@@ -43,7 +45,7 @@ public class TheTrident extends Ataques{
                                 y -= 1;
                                 if( x >= 0&& x < 20 && y >= 0 && y < 30){
                                  labelMatrix[x][y].setIcon(rojo);
-                                 dannarFichas(fichas, labelMatrix[x][y], 100);
+                                 dannarFichas(refPantalla, labelMatrix[x][y], 100);
                                 }
                             }
                             break;
@@ -52,7 +54,7 @@ public class TheTrident extends Ataques{
                                 y += 1;
                                 if( x >= 0&& x < 20 && y >= 0 && y < 30){
                                  labelMatrix[x][y].setIcon(rojo);
-                                 dannarFichas(fichas, labelMatrix[x][y], 100);
+                                 dannarFichas(refPantalla, labelMatrix[x][y], 100);
                                 }
                             }
                             break;
@@ -61,7 +63,7 @@ public class TheTrident extends Ataques{
                                 x += 1;
                                 if( x >= 0&& x < 20 && y >= 0 && y < 30){
                                  labelMatrix[x][y].setIcon(rojo);
-                                 dannarFichas(fichas, labelMatrix[x][y], 100);
+                                 dannarFichas(refPantalla, labelMatrix[x][y], 100);
                                 }
                             }
                             break;
@@ -70,7 +72,7 @@ public class TheTrident extends Ataques{
                                 x -= 1;
                                 if( x >= 0&& x < 20 && y >=0 && y < 30){
                                  labelMatrix[x][y].setIcon(rojo);
-                                 dannarFichas(fichas, labelMatrix[x][y], 100);
+                                 dannarFichas(refPantalla, labelMatrix[x][y], 100);
                                 }
                             }
                             break;
@@ -79,6 +81,9 @@ public class TheTrident extends Ataques{
                             break;
                     }
                         cont++;
+                        if(cont == 3){
+                            return;
+                        }
                         c = 30;
                     }
                     
@@ -87,10 +92,29 @@ public class TheTrident extends Ataques{
         }
     
     
-    public void threeNumbers(ArrayList<JLabel> fichas, InterfazCliente refPantalla){
+    public void threeNumbers(ArrayList<JLabel> fichas, InterfazCliente refPantalla, int cantidad){
+        Stack < Integer > posX = aleatorio(20);
+        Stack < Integer > posY = aleatorio(30);
+        int cont = 0;
+        JLabel[][] labelMatrix = refPantalla.labelMatrix;
+        Icon rojo = new ImageIcon(getClass().getResource("/Imagenes/rojo.png"));
+            for(int j = 0;j < 20;j++){
+                for(int c = 0+cont;c < 30;c++){
+                    if(labelMatrix[posX.get(j)][posY.get(c)].getIcon() != rojo && cont < cantidad){
+                        int x = posX.get(j);
+                        int y = posY.get(c);
+                        labelMatrix[x][y].setIcon(rojo);
+                        dannarFichas(refPantalla, labelMatrix[x][y], 100);
+                        cont++;
+                    }
+                    if(cont == cantidad){
+                            return;
+                        }
+                    c = 30;
+                }
+            
+        }
+        
     }
     
-    public void controlTheKraken(ArrayList<JLabel> fichas, InterfazCliente refPantalla){
-            
-    }
 }
