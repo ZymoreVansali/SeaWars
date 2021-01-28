@@ -33,13 +33,16 @@ public class Servidor extends Thread implements Serializable{
     private boolean turnosDecididos = false;
     private ArrayList<String> nombreOrder;
     private ArrayList<String> listaPerdedores;
+    int cantidadJugadores;
+    
 
-    public Servidor(InterfazCliente refPantalla) {
+    public Servidor(InterfazCliente refPantalla, int _cantidadJugadores) {
         this.refPantalla = refPantalla;
         conexiones = new ArrayList<ThreadServidor>();
         this.refPantalla.setSrv(this);
         this.nombreOrder = new ArrayList<String>();
         this.listaPerdedores = new ArrayList<String>();
+        this.cantidadJugadores = _cantidadJugadores;
     }
     
     public Servidor(InterfazCliente refPantalla, int turnoCargado, int limiteMaxCargado, Servidor servidorCargado) {
@@ -111,17 +114,7 @@ public class Servidor extends Thread implements Serializable{
             current.writer.writeInt(4);
         }
         
-        for (int i = 0; i < conexiones.size(); i++) {
-            ThreadServidor current = conexiones.get(i);
-            current.writer.writeInt(7);
-            current.writer.writeUTF("Por favor, seleccione una ficha.");
-        }
-        
-        for (int i = 0; i < conexiones.size(); i++) {
-            ThreadServidor current = conexiones.get(i);
-            current.writer.writeInt(8);
-            current.writer.writeInt(3500);
-        }
+     
     }
     
     
@@ -215,27 +208,10 @@ public class Servidor extends Thread implements Serializable{
     
     public void run(){
         int contadorDeConexiones = 0;
-        String stringCantidad;
-        int cantidadJugadores = 0;                      // Primero se pide la cantidad maxima de jugadores que van a participar, de 2 minimo a 6 maximo
         
-        do{
-           
-            stringCantidad = JOptionPane.showInputDialog("Escriba la cantidad de jugadores de la partida (Mínimo 2 y máximo 6): ");
+          // Primero se pide la cantidad maxima de jugadores que van a participar, de 2 minimo a 6 maximo
         
-        try{
-            cantidadJugadores = Integer.parseInt(stringCantidad);
-            
-        } catch(NumberFormatException e){
-            JOptionPane.showMessageDialog(null, "La cantidad debe ser un entero.");
-        }
         
-        if (cantidadJugadores < 2)
-            JOptionPane.showMessageDialog(null, "La cantidad mínima de jugadores es 2.");
-        
-        else if (cantidadJugadores > 6)
-            JOptionPane.showMessageDialog(null, "La cantidad máxima de jugadores es 6.");
-            
-        } while (cantidadJugadores < 2 || cantidadJugadores > 6);
 
         this.setLimiteMax(cantidadJugadores);               // Este será el limite maximo de la cantidad de jugadores de la partida
         

@@ -6,6 +6,9 @@
 package Ataques;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Stack;
+import javax.swing.JLabel;
 
 /**
  *
@@ -26,5 +29,40 @@ public abstract class Ataques implements Serializable{
         this.nombre = nombre;
     }
     
+    public Stack < Integer > aleatorio(int cant){
+        int pos;
+            Stack < Integer > pCartas = new Stack < Integer > ();
+            for (int i = 0; i < cant ; i++) {
+              pos = (int) Math.floor(Math.random() * cant );
+              while (pCartas.contains(pos)) {
+                pos = (int) Math.floor(Math.random() * cant );
+              }
+              pCartas.push(pos);
+            }
+        return pCartas;
+    }
+    
+    
+    
+    public int dannarFichas(ArrayList<JLabel> fichas, JLabel lbl, int danno){
+        int vida = 100;
+        System.out.println(fichas.size());
+        for(int i = 0; i < fichas.size(); i++){
+            if(fichas.get(i) == lbl){
+                if(Integer.parseInt(fichas.get(i).getText()) != 0){
+                    if(Integer.parseInt(fichas.get(i).getText())  - danno <= 0){
+                        fichas.get(i).setText("0");
+                    }
+                    else{
+                        danno = Integer.parseInt(fichas.get(i).getText()) - danno;
+                        fichas.get(i).setText(danno+"");
+                    }
+                    //System.out.println(fichas.get(i).vida);
+                }
+                return Integer.parseInt(fichas.get(i).getText());
+            }
+        }
+        return vida;
+    }
     
 }

@@ -73,11 +73,16 @@ public class ThreadServidor extends Thread implements Serializable {
                 instruccionId = reader.readInt(); // esperar hasta que reciba un entero
                 
                 switch (instruccionId){
-                    case 1: // pasan el nombre del usuario
-                        //nombre = reader.readUTF();
-                        //enviarTurnoInicial();                  
-                        
-                        
+                    case 1: // verificarVivo
+                           String vivo = reader.readUTF();
+                           String muerto = reader.readUTF();
+                            for (int i = 0; i < server.conexiones.size(); i++) {
+                                 ThreadServidor current = server.conexiones.get(i);
+                                 current.writer.writeInt(1);
+                                 current.writer.writeUTF(vivo);
+                                 current.writer.writeUTF(muerto);
+                             }
+                                      
                     break;
                     case 2: // pasan un mensaje por el chat
                         String usuario = reader.readUTF();
@@ -91,7 +96,16 @@ public class ThreadServidor extends Thread implements Serializable {
                         }
                     break;
                     case 3:
-                        
+                        usuario = reader.readUTF();
+                        String receptor = reader.readUTF();
+                        mensaje = reader.readUTF();
+                        for (int i = 0; i < server.conexiones.size(); i++) {
+                                ThreadServidor current = server.conexiones.get(i);
+                                current.writer.writeInt(3);
+                                current.writer.writeUTF(usuario);
+                                current.writer.writeUTF(receptor);
+                                current.writer.writeUTF(mensaje);
+                        }
                        
                     break;
                     case 4: // iniciar partida
@@ -109,8 +123,83 @@ public class ThreadServidor extends Thread implements Serializable {
                             current.writer.writeInt(5);
                         }
                         break;
-                        
+                    case 6:// ATAQUE DE KRAKEN  
+                        String atacado = reader.readUTF();
+                        String atacante = reader.readUTF();
+                        mensaje = reader.readUTF();
+                        for (int i = 0; i < server.conexiones.size(); i++) {
+                            ThreadServidor current = server.conexiones.get(i);
+                            current.writer.writeInt(6);
+                            current.writer.writeUTF(atacante);
+                            current.writer.writeUTF(atacado);
+                            current.writer.writeUTF(mensaje);
+                        }
+                    break;
+                    case 7:// ATAQUE DE POSEIDON
+                        atacado = reader.readUTF();
+                        atacante = reader.readUTF();
+                        mensaje = reader.readUTF();
+                        for (int i = 0; i < server.conexiones.size(); i++) {
+                            ThreadServidor current = server.conexiones.get(i);
+                            current.writer.writeInt(7);
+                            current.writer.writeUTF(atacante);
+                            current.writer.writeUTF(atacado);
+                            current.writer.writeUTF(mensaje);
+                        }
+                    break;
+                    case 8: // ATAQUE DE Fish Telepathy
+                        atacado = reader.readUTF();
+                        atacante = reader.readUTF();
+                        mensaje = reader.readUTF();
+                        for (int i = 0; i < server.conexiones.size(); i++) {
+                            ThreadServidor current = server.conexiones.get(i);
+                            current.writer.writeInt(8);
+                            current.writer.writeUTF(atacante);
+                            current.writer.writeUTF(atacado);
+                            current.writer.writeUTF(mensaje);
+                        }
+                    break;
+                    case 9: // ATAQUE DE Undersea Fire
+                        atacado = reader.readUTF();
+                        atacante = reader.readUTF();
+                        mensaje = reader.readUTF();
+                        for (int i = 0; i < server.conexiones.size(); i++) {
+                            ThreadServidor current = server.conexiones.get(i);
+                            current.writer.writeInt(9);
+                            current.writer.writeUTF(atacante);
+                            current.writer.writeUTF(atacado);
+                            current.writer.writeUTF(mensaje);
+                        }
+                    break;
+                    case 10: // ATAQUE DE Thunders under the sea
+                        atacado = reader.readUTF();
+                        atacante = reader.readUTF();
+                        mensaje = reader.readUTF();
+                        for (int i = 0; i < server.conexiones.size(); i++) {
+                            ThreadServidor current = server.conexiones.get(i);
+                            current.writer.writeInt(10);
+                            current.writer.writeUTF(atacante);
+                            current.writer.writeUTF(atacado);
+                            current.writer.writeUTF(mensaje);
+                        }
+                    break;
+                    case 11: // ATAQUE DE Waves control
+                        atacado = reader.readUTF();
+                        atacante = reader.readUTF();
+                        mensaje = reader.readUTF();
+                        for (int i = 0; i < server.conexiones.size(); i++) {
+                            ThreadServidor current = server.conexiones.get(i);
+                            current.writer.writeInt(11);
+                            current.writer.writeUTF(atacante);
+                            current.writer.writeUTF(atacado);
+                            current.writer.writeUTF(mensaje);
+                        }
+                    break;
                 }
+                
+                
+                       
+                
             } catch (IOException ex) {
                 
             }

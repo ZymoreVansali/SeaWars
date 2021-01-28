@@ -5,6 +5,8 @@
  */
 package Cliente;
 
+import Ataques.Kraken;
+import Ataques.TheTrident;
 import java.awt.Color;
 import java.awt.Image;
 import java.io.DataInputStream;
@@ -101,7 +103,7 @@ public class ThreadCliente extends Thread implements Serializable{
     public void actuarCarta(){      // Para reaccionar ante las diferentes cartas del juego
         
     }
-
+    
     
     public void run (){
         
@@ -112,8 +114,10 @@ public class ThreadCliente extends Thread implements Serializable{
                 instruccionId = reader.readInt(); // esperar hasta que reciba un entero
                 
                 switch (instruccionId){
-                    case 1:
-                           int i = 0;
+                    case 1:// verificarVivo
+                           usuario = reader.readUTF();
+                           String atacante = reader.readUTF();
+                           refPantalla.addMensaje("El jugador " + usuario + " ha sido eliminado por "+atacante);
                     break;
                     case 2: // pasan un mensaje por el chat
                         usuario = reader.readUTF();
@@ -121,8 +125,15 @@ public class ThreadCliente extends Thread implements Serializable{
                         //System.out.println("CLIENTE Recibido mensaje: " + mensaje);
                         refPantalla.addMensaje(usuario+ ":   " + mensaje);
                     break;
-                    case 3: // pasan un mensaje por el chat
-                        usuario = reader.readUTF();   
+                    case 3: 
+                        
+                        usuario = reader.readUTF();
+                        String receptor = reader.readUTF();
+                        mensaje = reader.readUTF();
+                        if(nombre.equals(receptor)){
+                            //System.out.println("CLIENTE Recibido mensaje: " + mensaje);
+                            refPantalla.addMensaje(usuario + "(mensaje privado)" + ":   " + mensaje);
+                        }
                     break;                    
                     case 4: // Se inicia la partida
                         refPantalla.setInicioPartida();
@@ -133,12 +144,217 @@ public class ThreadCliente extends Thread implements Serializable{
                         String nombreJugador = this.getRefPantalla().getNombreJugador();
                         FileManager.writeObject(this,"src/Partida/partida" + nombreJugador + ".dat");
                     break;
-                    
-                    
+                    case 6: // Ataque kraken
+                        usuario = reader.readUTF();
+                        receptor = reader.readUTF();
+                        mensaje = reader.readUTF();
+                        if(refPantalla.refCliente.vivo==true){
+                            refPantalla.addMensaje(usuario + " esta atacando a " + receptor + " con : " + mensaje);
+                            if(nombre.equals(receptor)){
+                                ArrayList<JLabel> fichas = refPantalla.refCliente.fichas;
+                                    Kraken k = new Kraken("");
+                                if(null != mensaje)switch (mensaje) {
+                                    case "tentacles":
+                                        k.tentacles(fichas, refPantalla);
+                                        break;
+                                    case "krakenBreath":
+                                        k.krakenBreath(fichas, refPantalla);
+                                        break;
+                                    case "releaseTheKraken":
+                                        k.releaseTheKraken(fichas, refPantalla);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            refPantalla.refCliente.verificarVivo();
+                            if(refPantalla.refCliente.vivo == false){
+                                refPantalla.perder();
+                                refPantalla.refCliente.hiloCliente.writer.writeInt(1);
+                                refPantalla.refCliente.hiloCliente.writer.writeUTF(usuario);
+                                refPantalla.refCliente.hiloCliente.writer.writeUTF(receptor);
+                            }
+                        }
+                        else{
+                            refPantalla.refCliente.hiloCliente.writer.writeInt(2);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
+                            refPantalla.refCliente.hiloCliente.writer.writeUTF(receptor);
+                            refPantalla.refCliente.hiloCliente.writer.writeUTF("El jugador "+usuario+" pide dejar de ser atacado por "+ receptor+" ya que ya esta muerto, asi que por abuson pierdes  tu turno :3");
+                        }
+                        break;
+                        case 7: // ATAQUE DE POSEIDON
+                        usuario = reader.readUTF();
+                        receptor = reader.readUTF();
+                        mensaje = reader.readUTF();
+                        if(refPantalla.refCliente.vivo==true){
+                            refPantalla.addMensaje(usuario + " esta atacando a " + receptor + " con : " + mensaje);
+                            if(nombre.equals(receptor)){
+                                ArrayList<JLabel> fichas = refPantalla.refCliente.fichas;
+                                    TheTrident t = new TheTrident("");
+                                if(null != mensaje)switch (mensaje) {
+                                    case "threeLines":
+                                        t.threeLines(fichas, refPantalla);
+                                        break;
+                                    case "threeNumbers":
+                                        t.threeNumbers(fichas, refPantalla);
+                                        break;
+                                    case "controlTheKraken":
+                                        t.controlTheKraken(fichas, refPantalla);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            refPantalla.refCliente.verificarVivo();
+                            if(refPantalla.refCliente.vivo == false){
+                                refPantalla.perder();
+                                refPantalla.refCliente.hiloCliente.writer.writeInt(1);
+                                refPantalla.refCliente.hiloCliente.writer.writeUTF(usuario);
+                                refPantalla.refCliente.hiloCliente.writer.writeUTF(receptor);
+                            }
+                        }
+                        else{
+                            refPantalla.refCliente.hiloCliente.writer.writeInt(2);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
+                            refPantalla.refCliente.hiloCliente.writer.writeUTF(receptor);
+                            refPantalla.refCliente.hiloCliente.writer.writeUTF("El jugador "+usuario+" pide dejar de ser atacado por "+ receptor+" ya que ya esta muerto, asi que por abuson pierdes  tu turno :3");
+                        }
+                        break;
+                        case 8: // ATAQUE DE Fish Telepathy
+                        usuario = reader.readUTF();
+                        receptor = reader.readUTF();
+                        mensaje = reader.readUTF();
+                        if(refPantalla.refCliente.vivo==true){
+                            refPantalla.addMensaje(usuario + " esta atacando a " + receptor + " con : " + mensaje);
+                            if(nombre.equals(receptor)){
+                                ArrayList<JLabel> fichas = refPantalla.refCliente.fichas;
+                                    Kraken k = new Kraken("");
+                                if("tentacles".equals(mensaje)){
+                                    k.tentacles(fichas, refPantalla);
+                                }
+                                else if("krakenBreath".equals(mensaje)){
+                                    k.krakenBreath(fichas, refPantalla);
+                                }
+                                else if("releaseTheKraken".equals(mensaje)){
+                                    k.releaseTheKraken(fichas, refPantalla);
+                                }
+                            }
+                            refPantalla.refCliente.verificarVivo();
+                            if(refPantalla.refCliente.vivo == false){
+                                refPantalla.perder();
+                                refPantalla.refCliente.hiloCliente.writer.writeInt(1);
+                                refPantalla.refCliente.hiloCliente.writer.writeUTF(usuario);
+                                refPantalla.refCliente.hiloCliente.writer.writeUTF(receptor);
+                            }
+                        }
+                        else{
+                            refPantalla.refCliente.hiloCliente.writer.writeInt(2);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
+                            refPantalla.refCliente.hiloCliente.writer.writeUTF(receptor);
+                            refPantalla.refCliente.hiloCliente.writer.writeUTF("El jugador "+usuario+" pide dejar de ser atacado por "+ receptor+" ya que ya esta muerto, asi que por abuson pierdes  tu turno :3");
+                        }
+                        break;
+                        case 9: // ATAQUE DE Undersea Fire
+                        usuario = reader.readUTF();
+                        receptor = reader.readUTF();
+                        mensaje = reader.readUTF();
+                        if(refPantalla.refCliente.vivo==true){
+                            refPantalla.addMensaje(usuario + " esta atacando a " + receptor + " con : " + mensaje);
+                            if(nombre.equals(receptor)){
+                                ArrayList<JLabel> fichas = refPantalla.refCliente.fichas;
+                                    Kraken k = new Kraken("");
+                                if("tentacles".equals(mensaje)){
+                                    k.tentacles(fichas, refPantalla);
+                                }
+                                else if("krakenBreath".equals(mensaje)){
+                                    k.krakenBreath(fichas, refPantalla);
+                                }
+                                else if("releaseTheKraken".equals(mensaje)){
+                                    k.releaseTheKraken(fichas, refPantalla);
+                                }
+                            }
+                            refPantalla.refCliente.verificarVivo();
+                            if(refPantalla.refCliente.vivo == false){
+                                refPantalla.perder();
+                                refPantalla.refCliente.hiloCliente.writer.writeInt(1);
+                                refPantalla.refCliente.hiloCliente.writer.writeUTF(usuario);
+                                refPantalla.refCliente.hiloCliente.writer.writeUTF(receptor);
+                            }
+                        }
+                        else{
+                            refPantalla.refCliente.hiloCliente.writer.writeInt(2);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
+                            refPantalla.refCliente.hiloCliente.writer.writeUTF(receptor);
+                            refPantalla.refCliente.hiloCliente.writer.writeUTF("El jugador "+usuario+" pide dejar de ser atacado por "+ receptor+" ya que ya esta muerto, asi que por abuson pierdes  tu turno :3");
+                        }
+                        break;
+                        case 10: // ATAQUE DE Thunders under the sea
+                        usuario = reader.readUTF();
+                        receptor = reader.readUTF();
+                        mensaje = reader.readUTF();
+                        if(refPantalla.refCliente.vivo==true){
+                            refPantalla.addMensaje(usuario + " esta atacando a " + receptor + " con : " + mensaje);
+                            if(nombre.equals(receptor)){
+                                ArrayList<JLabel> fichas = refPantalla.refCliente.fichas;
+                                    Kraken k = new Kraken("");
+                                if("tentacles".equals(mensaje)){
+                                    k.tentacles(fichas, refPantalla);
+                                }
+                                else if("krakenBreath".equals(mensaje)){
+                                    k.krakenBreath(fichas, refPantalla);
+                                }
+                                else if("releaseTheKraken".equals(mensaje)){
+                                    k.releaseTheKraken(fichas, refPantalla);
+                                }
+                            }
+                            refPantalla.refCliente.verificarVivo();
+                            if(refPantalla.refCliente.vivo == false){
+                                refPantalla.perder();
+                                refPantalla.refCliente.hiloCliente.writer.writeInt(1);
+                                refPantalla.refCliente.hiloCliente.writer.writeUTF(usuario);
+                                refPantalla.refCliente.hiloCliente.writer.writeUTF(receptor);
+                            }
+                        }
+                        else{
+                            refPantalla.refCliente.hiloCliente.writer.writeInt(2);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
+                            refPantalla.refCliente.hiloCliente.writer.writeUTF(receptor);
+                            refPantalla.refCliente.hiloCliente.writer.writeUTF("El jugador "+usuario+" pide dejar de ser atacado por "+ receptor+" ya que ya esta muerto, asi que por abuson pierdes  tu turno :3");
+                        }
+                        break;
+                        case 11: // ATAQUE DE Waves control
+                        usuario = reader.readUTF();
+                        receptor = reader.readUTF();
+                        mensaje = reader.readUTF();
+                        if(refPantalla.refCliente.vivo==true){
+                            refPantalla.addMensaje(usuario + " esta atacando a " + receptor + " con : " + mensaje);
+                            if(nombre.equals(receptor)){
+                                ArrayList<JLabel> fichas = refPantalla.refCliente.fichas;
+                                    Kraken k = new Kraken("");
+                                if("tentacles".equals(mensaje)){
+                                    k.tentacles(fichas, refPantalla);
+                                }
+                                else if("krakenBreath".equals(mensaje)){
+                                    k.krakenBreath(fichas, refPantalla);
+                                }
+                                else if("releaseTheKraken".equals(mensaje)){
+                                    k.releaseTheKraken(fichas, refPantalla);
+                                }
+                            }
+                            refPantalla.refCliente.verificarVivo();
+                            if(refPantalla.refCliente.vivo == false){
+                                refPantalla.perder();
+                                refPantalla.refCliente.hiloCliente.writer.writeInt(1);
+                                refPantalla.refCliente.hiloCliente.writer.writeUTF(usuario);
+                                refPantalla.refCliente.hiloCliente.writer.writeUTF(receptor);
+                            }
+                        }
+                        else{
+                            refPantalla.refCliente.hiloCliente.writer.writeInt(2);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
+                            refPantalla.refCliente.hiloCliente.writer.writeUTF(receptor);
+                            refPantalla.refCliente.hiloCliente.writer.writeUTF("El jugador "+usuario+" pide dejar de ser atacado por "+ receptor+" ya que ya esta muerto, asi que por abuson pierdes  tu turno :3");
+                        }
+                        break;
                 }
             } catch (IOException ex) {
                
         }
+            
     }
     }
     

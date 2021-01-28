@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 
@@ -22,6 +25,8 @@ public class Cliente implements Serializable{
     InterfazCliente refPantalla;
     public ThreadCliente hiloCliente;
     ArrayList<Personaje> personajes;
+    public ArrayList<JLabel> fichas = new ArrayList<>();
+    public boolean vivo = true;
 
     public Socket getSocketRef() {
         return socketRef;
@@ -150,48 +155,6 @@ public class Cliente implements Serializable{
             i--;
         }
         int valor = 0;
-        if(null == texto[2]){
-            return false;
-        }
-        else switch (texto[2]) {
-            case "100":
-                valor = 100;
-                break;
-            case "75":
-                valor = 75;
-                break;
-            case "50":
-                valor = 50;
-                break;
-            default:
-                return false;
-        }
-        if(valor == 100){
-            if(mayor == 3){
-                return false;
-            }
-            else{
-                mayor++;
-            }
-        }
-        else if(valor == 75){
-            if(medio == 3){
-                return false;
-            }
-            else{
-                medio++;
-            }
-        }
-        else if(valor == 50){
-            if(menor == 3){
-                return false;
-            }
-            else{
-                menor++;
-            }
-        }
-        
-        
         if(null == texto[3]){
             return false;
         }
@@ -233,10 +196,52 @@ public class Cliente implements Serializable{
             }
         }
         
+        
         if(null == texto[4]){
             return false;
         }
         else switch (texto[4]) {
+            case "100":
+                valor = 100;
+                break;
+            case "75":
+                valor = 75;
+                break;
+            case "50":
+                valor = 50;
+                break;
+            default:
+                return false;
+        }
+        if(valor == 100){
+            if(mayor == 3){
+                return false;
+            }
+            else{
+                mayor++;
+            }
+        }
+        else if(valor == 75){
+            if(medio == 3){
+                return false;
+            }
+            else{
+                medio++;
+            }
+        }
+        else if(valor == 50){
+            if(menor == 3){
+                return false;
+            }
+            else{
+                menor++;
+            }
+        }
+        
+        if(null == texto[5]){
+            return false;
+        }
+        else switch (texto[5]) {
             case "100":
                 valor = 100;
                 break;
@@ -334,46 +339,52 @@ public class Cliente implements Serializable{
         if(personajes.size() == 3){
             return false;
         }
-        else if(texto.length < 7){
+        else if(texto.length < 8){
             return false;
         }     
         else if(validarPoderes(texto) != true){
             return false;
         }
-        else if(validarPorcentajes(texto[6])!= true){
+        else if(validarPorcentajes(texto[7])!= true){
             return false;
         }
-        else if(validarAtaque(texto[5])!= true){
+        else if(validarAtaque(texto[6])!= true){
             return false;
         }
         return true;
     }
     
-    public String crearPersonajes(String texto){
-        String[] separado = texto.split("-");
+    public String crearPersonajes(String[] separado){
         if(!validarCreacion(separado)){
             return "Ha ocurrido un error en la creacion del personaje";
         }
         Personaje nuevo = new Personaje(); 
-        nuevo.setNombre(separado[0]);
-        nuevo.setImagen(separado[1]);
-        nuevo.setPoder(Integer.parseInt(separado[2]));
-        nuevo.setResistencia(Integer.parseInt(separado[3]));
-        nuevo.setSanidad(Integer.parseInt(separado[4]));
-        nuevo.setAtaque(separado[5]);
-        nuevo.setPorcentaje(Integer.parseInt(separado[6]));
-        
-        if(personajes.size() == 1)
-            nuevo.agregarFichas(Color.ORANGE);
-        else if(personajes.size() == 2)
-            nuevo.agregarFichas(Color.BLUE);
-        else
-            nuevo.agregarFichas(Color.BLACK);
+        nuevo.setNombre(separado[1]);
+        nuevo.setImagen(separado[2]);
+        nuevo.setPoder(Integer.parseInt(separado[3]));
+        nuevo.setResistencia(Integer.parseInt(separado[4]));
+        nuevo.setSanidad(Integer.parseInt(separado[5]));
+        nuevo.setAtaque(separado[6]);
+        nuevo.setPorcentaje(Integer.parseInt(separado[7]));
         personajes.add(nuevo);
 
 
         return "Personaje creado correctamente";
     }
+    
+    public void verificarVivo(){
+        for(int i = 0;i <personajes.size();i++){
+            personajes.get(i).verificarVivo();
+            System.out.println(i+ " per "+ personajes.get(i).vivo);
+            if(personajes.get(i).vivo){ 
+                return;
+            }
+        }
+        this.vivo = false;
+    }
+    
+    
+    
     
     
 }

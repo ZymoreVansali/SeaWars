@@ -12,7 +12,6 @@ import Ataques.TheTrident;
 import Ataques.Thunder;
 import Ataques.Volcanoes;
 import Ataques.WavesControl;
-import Ficha.Ficha;
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,14 +22,15 @@ import javax.swing.JLabel;
  * @author Usuario
  */
 public class Personaje implements Serializable{
-    private String nombre;
-    private String imagen;
-    private int porcentaje;
-    private Ataques ataque;
-    private int poder;
-    private int resistencia;
-    private int sanidad;
-    public ArrayList<Ficha> fichas;
+    private String nombre = "";
+    private String imagen = "";
+    private double porcentaje = 0.0;
+    public Ataques ataque;
+    private int poder = 0;
+    private int resistencia = 0;
+    private int sanidad = 0;
+    public ArrayList<JLabel> fichas = new ArrayList<>();
+    public boolean vivo = true;
 
     public String getNombre() {
         return nombre;
@@ -48,12 +48,12 @@ public class Personaje implements Serializable{
         this.imagen = imagen;
     }
 
-    public int getPorcentaje() {
+    public double getPorcentaje() {
         return porcentaje;
     }
 
-    public void setPorcentaje(int porcentaje) {
-        this.porcentaje = porcentaje;
+    public void setPorcentaje(double porcentaje) {
+        this.porcentaje = porcentaje/100;
     }
 
     public Ataques getAtaque() {
@@ -105,13 +105,20 @@ public class Personaje implements Serializable{
         this.sanidad = sanidad;
     }
     
-    public void agregarFichas(Color color){
-        int cantidad = porcentaje/100*12000;
-        for(int i = 1; i < cantidad;i++){
-                        Ficha ficha = new Ficha(new JLabel());
-                        ficha.label.setBackground(color);
-                        fichas.add(ficha);
+    public void agregarFichas(JLabel lbl){
+        fichas.add(lbl);
+    }
+    
+    
+    public void verificarVivo(){
+        for(int i = 0;i <fichas.size();i++){  
+            String msm = fichas.get(i).getText();
+            System.out.println(msm);
+            if(Integer.parseInt(msm) > 0){ 
+                return;
+            }
         }
+        this.vivo = false;
     }
     
 }

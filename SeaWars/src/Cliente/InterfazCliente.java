@@ -5,14 +5,23 @@
  */
 package Cliente;
 
-import Ficha.Ficha;
 import Personaje.Personaje;
 import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.LayoutManager;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.plaf.IconUIResource;
 import servidor.Servidor;
 
 /**
@@ -22,20 +31,43 @@ import servidor.Servidor;
 public class InterfazCliente extends javax.swing.JFrame {
     
     private Servidor srv;
-    private ArrayList<JLabel> labels;
+    private ArrayList<JLabel> labels = new ArrayList();
+    public JLabel[][] labelMatrix = new JLabel[20][30];
+    public boolean vivo = true;
     
     public InterfazCliente() {
         initComponents();
+        agregarLbl();
         
     }
     public Cliente refCliente;           // Nombre del jugador cuyo turno es actualmente
     private String nombreJugador = "";
     
     
-    public void newServer(){
-        Servidor srv = new Servidor(this);
+    public String newServer(String stringCantidad){
+        int cantidadJugadores = 0;
+        do{
+           
+            
+        
+        try{
+            cantidadJugadores = Integer.parseInt(stringCantidad);
+            
+        } catch(NumberFormatException e){
+            return "La cantidad debe ser un entero.";
+        }
+        
+        if (cantidadJugadores < 2)
+            return "La cantidad mínima de jugadores es 2.";
+        
+        else if (cantidadJugadores > 6)
+            return "La cantidad máxima de jugadores es 6.";
+            
+        } while (cantidadJugadores < 2 || cantidadJugadores > 6);
+        Servidor srv = new Servidor(this, cantidadJugadores);
         setTitle("Servidor Sea War");
         srv.start();
+        return "Servidor creado correctamente";
     }
     
     public void setSrv(Servidor srv) {
@@ -106,33 +138,61 @@ public class InterfazCliente extends javax.swing.JFrame {
     }
     
     private void agregarLbl(){
-        int row, column, cont;	
-            row = 21;
-            column = 601;
-            cont = 0;
-		for(int i=1; i < row; i++) {
-                    for(int j=1; j < column; j++) {
-                        labels.get(cont).setBounds(i*10, j*10, 10, 10);
-                        System.out.println("i= "+j);
-                        labels.get(cont).setVisible(true);
-                        System.out.println("i= "+j);
-                        cont++;
-                    }
-    }
+        int y = 0;
+        JLabel [][] labelMatrix = new JLabel[20][30];
+        for(int i = 0; i < labelMatrix.length; i++){
+            int x = 0;
+            for(int j = 0; j < labelMatrix[i].length; j++){
+                labelMatrix[i][j] = new javax.swing.JLabel();
+                labelMatrix[i][j].setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+                labels.add(labelMatrix[i][j]);
+                labelsPanel.add(labelMatrix[i][j]);
+                labelMatrix[i][j].setBounds(x, y, 20, 20);
+                x += 20;
+            }
+            y += 20;
+        }
+        this.labelMatrix = labelMatrix;
     }
     
     public void crearPantalla(){
+        ArrayList<Icon> iconos = new ArrayList<>();
+        iconos.add(new ImageIcon(getClass().getResource("/Imagenes/azul.png")));
+        iconos.add(new ImageIcon(getClass().getResource("/Imagenes/gris.png")));
+        iconos.add(new ImageIcon(getClass().getResource("/Imagenes/anaranjado.png")));
+        int cont = 0;
+        
+        int pos;
+        int nCartas = 600;
+        Stack < Integer > pCartas = new Stack < Integer > ();
+        for (int i = 0; i < nCartas ; i++) {
+          pos = (int) Math.floor(Math.random() * nCartas );
+          while (pCartas.contains(pos)) {
+            pos = (int) Math.floor(Math.random() * nCartas );
+          }
+          pCartas.push(pos);
+        }
         
         for(int i=0; i < refCliente.personajes.size(); i++) {
             Personaje personaje = refCliente.personajes.get(i);
-            for(int j=0; j < personaje.getPorcentaje()/100*12000; j++) {
-                JLabel lbl = personaje.fichas.get(j).label;
-                labels.add(lbl);
-            }
+            double cantidad = 600*personaje.getPorcentaje();
+            for(int j = 0; j < cantidad;j++){
+                labels.get(pCartas.get(cont)).setIcon(iconos.get(i));
+                labels.get(pCartas.get(cont)).setText("100");
+                refCliente.personajes.get(i).agregarFichas(labels.get(j));
+                refCliente.fichas.add(refCliente.personajes.get(i).fichas.get(j));
+                cont++;
+             }
+            
         }
-        agregarLbl();
     }
-                                                                                                                            
+
+    public boolean verificarVivo(){
+        if(refCliente != null){
+            return refCliente.vivo;
+        }
+        return true;
+    }                                                                                                  
 
     /**
      * Creates new form InterfazCliente
@@ -149,6 +209,60 @@ public class InterfazCliente extends javax.swing.JFrame {
         commandTextArea.append(msj + "\n");
     }   
 
+    
+    public String atacar(String[] separado) throws IOException{
+        boolean flag = false;
+        if(separado.length != 4){
+            return "Comando invalido";
+        }
+        else{
+            if("Kraken".equals(separado[1])){
+                for(int i =0; i < 3; i++){
+                    if("Kraken".equals(refCliente.personajes.get(i).ataque.getNombre()))
+                        flag = true;
+                }
+                if(flag){
+                    if("tentacles".equals(separado[2]) || "krakenBreath".equals(separado[2]) || "releaseTheKraken".equals(separado[2])) {
+                        
+                            refCliente.hiloCliente.writer.writeInt(6);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
+                            refCliente.hiloCliente.writer.writeUTF(separado[3]);
+                            refCliente.hiloCliente.writer.writeUTF(lblNombreJugador.getText());
+                            refCliente.hiloCliente.writer.writeUTF(separado[2]);
+                            return "Ataque realizado con exito";
+                    }
+                }
+                else{
+                    return "Usted no tiene al personaje del Kraken";
+                }
+            }
+            else if("TheTrident".equals(separado[1])){
+                for(int i =0; i < 3; i++){
+                    if("TheTrident".equals(refCliente.personajes.get(i).ataque.getNombre()))
+                        flag = true;
+                }
+                if(flag){
+                    if("threeLines".equals(separado[2]) || "threeNumbers".equals(separado[2]) || "controlTheKraken".equals(separado[2])) {
+                        
+                            refCliente.hiloCliente.writer.writeInt(7);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
+                            refCliente.hiloCliente.writer.writeUTF(separado[3]);
+                            refCliente.hiloCliente.writer.writeUTF(lblNombreJugador.getText());
+                            refCliente.hiloCliente.writer.writeUTF(separado[2]);
+                            return "Ataque realizado con exito";
+                    }
+                }
+                else{
+                    return "Usted no tiene al personaje del The trident";
+                }
+            }
+        }
+        return "No se pudo realizar el ataque";
+    }
+    
+    public void perder(){
+        lblNombreJugador.setText(lblNombreJugador.getText() + " (eliminado)");
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -158,45 +272,40 @@ public class InterfazCliente extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        commandTextArea = new javax.swing.JTextArea();
-        jButton2 = new javax.swing.JButton();
+        generalPanel = new javax.swing.JPanel();
+        lblNombreJugador = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         textArea2 = new javax.swing.JTextArea();
-        jButton3 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        commandTextArea = new javax.swing.JTextArea();
+        commandTextField = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
-        panelLabels = new javax.swing.JPanel();
-        jButton5 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        labelsPanels = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        labelsPanel = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        commandTextArea.setColumns(20);
-        commandTextArea.setRows(5);
-        jScrollPane3.setViewportView(commandTextArea);
-
-        jButton2.setText("jButton2");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
 
         textArea2.setColumns(20);
         textArea2.setRows(5);
         jScrollPane1.setViewportView(textArea2);
 
-        jButton3.setText("jButton3");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        commandTextArea.setColumns(20);
+        commandTextArea.setRows(5);
+        jScrollPane3.setViewportView(commandTextArea);
+
+        commandTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                commandTextFieldActionPerformed(evt);
+            }
+        });
+        commandTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                commandTextFieldKeyPressed(evt);
             }
         });
 
@@ -207,107 +316,256 @@ public class InterfazCliente extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout panelLabelsLayout = new javax.swing.GroupLayout(panelLabels);
-        panelLabels.setLayout(panelLabelsLayout);
-        panelLabelsLayout.setHorizontalGroup(
-            panelLabelsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 871, Short.MAX_VALUE)
-        );
-        panelLabelsLayout.setVerticalGroup(
-            panelLabelsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-
-        jButton5.setText("jButton5");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        jButton2.setText("jButton2");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                jButton2ActionPerformed(evt);
             }
         });
+
+        labelsPanels.setLayout(null);
+
+        labelsPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        javax.swing.GroupLayout labelsPanelLayout = new javax.swing.GroupLayout(labelsPanel);
+        labelsPanel.setLayout(labelsPanelLayout);
+        labelsPanelLayout.setHorizontalGroup(
+            labelsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 598, Short.MAX_VALUE)
+        );
+        labelsPanelLayout.setVerticalGroup(
+            labelsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 398, Short.MAX_VALUE)
+        );
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("jButton3");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
+        generalPanel.setLayout(generalPanelLayout);
+        generalPanelLayout.setHorizontalGroup(
+            generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(generalPanelLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(generalPanelLayout.createSequentialGroup()
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(82, 82, 82)
+                                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jButton2)
+                                    .addComponent(jButton4)
+                                    .addComponent(jButton1)
+                                    .addComponent(jButton3)))
+                            .addComponent(commandTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(67, 67, 67)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(generalPanelLayout.createSequentialGroup()
+                        .addComponent(lblNombreJugador, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(labelsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(labelsPanels, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(62, 62, 62))
+        );
+        generalPanelLayout.setVerticalGroup(
+            generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(generalPanelLayout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(labelsPanels, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(generalPanelLayout.createSequentialGroup()
+                                .addComponent(lblNombreJugador, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(generalPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(generalPanelLayout.createSequentialGroup()
+                                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(191, 191, 191))
+                            .addComponent(labelsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 8, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, generalPanelLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, generalPanelLayout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(commandTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, generalPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addGap(17, 17, 17)
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton4)
+                .addGap(102, 102, 102))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(66, 66, 66)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton4, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton5, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addGap(21, 21, 21))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(panelLabels, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(178, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(generalPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(panelLabels, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(66, 66, 66)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton5)
-                                .addGap(5, 5, 5)
-                                .addComponent(jButton2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton4)))
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))))
+            .addComponent(generalPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        this.newPlayer(commandTextArea.getText());
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        try {
-            // TODO add your handling code here:
-            refCliente.hiloCliente.writer.writeInt(2);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
-            refCliente.hiloCliente.writer.writeUTF(refCliente.hiloCliente.getNombre());
-            refCliente.hiloCliente.writer.writeUTF(commandTextArea.getText());
-        } catch (IOException ex) {
-
-        }
-        this.textArea2.setText("");
+        String i = "crearPersonaje-Zeus-1-100-100-100-Kraken-35";
+        String d = "crearPersonaje-Zeus-1-75-75-75-TheTrident-46";
+        String f = "crearPersonaje-Zeus-1-50-50-50-Kraken-19";
+        String[] a = i.split("-");
+        String[] b = d.split("-");
+        String[] c = f.split("-");
+        addMensaje(refCliente.crearPersonajes(a));
+        addMensaje(refCliente.crearPersonajes(b));
+        addMensaje(refCliente.crearPersonajes(c));
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        this.newServer();
-    }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         crearPantalla();
     }//GEN-LAST:event_jButton4ActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void commandTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_commandTextFieldActionPerformed
         // TODO add your handling code here:
-        refCliente.crearPersonajes("Zeus-1-100-100-100-Kraken-50");
-        refCliente.crearPersonajes("Zeus-2-100-100-100-Kraken-25");
-        refCliente.crearPersonajes("Zeus-3-100-100-100-Kraken-25");
-    }//GEN-LAST:event_jButton5ActionPerformed
+        
+    }//GEN-LAST:event_commandTextFieldActionPerformed
+
+    private void commandTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_commandTextFieldKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            this.vivo = verificarVivo();
+            if(this.vivo){
+                String command = commandTextField.getText();
+                String[] separado = command.split("-");// Crear Personajes
+                System.out.println(separado[0]);
+                if(null == separado[0]){
+                    addMensaje("Error, el comando ingresado es inexistente");
+                }
+                else switch (separado[0]) {
+                    case "crearPersonaje":
+                        addMensaje(refCliente.crearPersonajes(separado));
+                        break;
+                    case "crearServidor":
+                        // Iniciar Servidor
+                        if(separado.length == 2){
+                            addMensaje(this.newServer(separado[1]));
+                        }
+                        else{
+                            addMensaje("El comando no esta ingresado correctamente.");
+                        }
+                        break;
+                    case "nuevaConexion":
+                        if(separado.length == 2){
+                            String nombre = separado[1];
+                            this.newPlayer(nombre);
+                            lblNombreJugador.setText(nombre);
+                        }
+                        else{
+                            addMensaje("El comando no esta ingresado correctamente.");
+                        }
+                        break;
+                    case "chatGeneral":
+                        // Chat general
+                        try {
+
+                            // TODO add your handling code here:
+                            refCliente.hiloCliente.writer.writeInt(2);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
+                            refCliente.hiloCliente.writer.writeUTF(lblNombreJugador.getText());
+                            refCliente.hiloCliente.writer.writeUTF(separado[1]);
+                        } catch (IOException ex) {
+
+                        }   break;
+                    case "chatPrivado":
+                        if(separado.length == 3){
+                            try {
+                                // TODO add your handling code here:
+                                refCliente.hiloCliente.writer.writeInt(3);      // Se envia al servidor la accion de enviar un mensaje por chat y se envia el mensaje
+                                refCliente.hiloCliente.writer.writeUTF(lblNombreJugador.getText());
+                                refCliente.hiloCliente.writer.writeUTF(separado[1]);
+                                refCliente.hiloCliente.writer.writeUTF(separado[2]);
+                            } catch (IOException ex) {
+
+                            }
+                        }
+                        else{
+                            addMensaje("Ha ocurrido un error con el envio del mensaje");
+                        }   break;
+                    case "ataque":
+                        {
+                        try {
+                            
+                            addMensaje(atacar(separado));
+                        } catch (IOException ex) {
+                            Logger.getLogger(InterfazCliente.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                     break;   
+                    }
+                    default:
+                        addMensaje("Error, el comando ingresado es inexistente");
+                        break;
+                }
+                commandTextField.setText("");
+                
+                
+            }
+            else{
+                addMensaje("Usted esta muerto, buena suerte en la proxima");
+            }
+            
+        }
+    }//GEN-LAST:event_commandTextFieldKeyPressed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            // TODO add your handling code here:
+            String command = "ataque-TheTrident-threeLines-fer";
+            String[] separado = command.split("-");// Crear Personajes
+            addMensaje(atacar(separado));
+        } catch (IOException ex) {
+            Logger.getLogger(InterfazCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     
     /**
@@ -347,14 +605,19 @@ public class InterfazCliente extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea commandTextArea;
+    private javax.swing.JTextField commandTextField;
+    private javax.swing.JPanel generalPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JPanel panelLabels;
+    private javax.swing.JPanel labelsPanel;
+    private javax.swing.JPanel labelsPanels;
+    private javax.swing.JLabel lblNombreJugador;
     private javax.swing.JTextArea textArea2;
     // End of variables declaration//GEN-END:variables
 }
