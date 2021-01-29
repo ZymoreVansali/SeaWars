@@ -31,6 +31,10 @@ public class Cliente implements Serializable{
     public boolean controlKraken = false;
     public ArrayList<Point> volcanoes = new ArrayList<>();
     public ArrayList<Integer> cant = new ArrayList<>();
+    public ArrayList<Point> remolinos = new ArrayList<>();
+    public ArrayList<Integer> cantRemo = new ArrayList<>();
+    public ArrayList<JLabel> casillasRadioactivas = new ArrayList<>();
+    public String bitacora = "";
 
     public Socket getSocketRef() {
         return socketRef;

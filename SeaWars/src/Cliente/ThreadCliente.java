@@ -8,7 +8,9 @@ package Cliente;
 import Ataques.FishTelephaty;
 import Ataques.Kraken;
 import Ataques.TheTrident;
+import Ataques.Thunder;
 import Ataques.Volcanoes;
+import Ataques.WavesControl;
 import java.awt.Color;
 import java.awt.Image;
 import java.io.DataInputStream;
@@ -277,14 +279,18 @@ public class ThreadCliente extends Thread implements Serializable{
                             if(nombre.equals(receptor)){
                                 ArrayList<JLabel> fichas = refPantalla.refCliente.fichas;
                                     Volcanoes v = new Volcanoes("");
-                                if("volcanoRaising".equals(mensaje)){
-                                    v.volcanoRaising(fichas, refPantalla);
-                                }
-                                else if("volcanoExplotion".equals(mensaje)){
-                                    v.volcanoExplotion(fichas, refPantalla);
-                                }
-                                else if("thermalRush".equals(mensaje)){
-                                    v.thermalRush(fichas, refPantalla);
+                                if(null != mensaje)switch (mensaje) {
+                                    case "volcanoRaising":
+                                        v.volcanoRaising(fichas, refPantalla);
+                                        break;
+                                    case "volcanoExplotion":
+                                        v.volcanoExplotion(fichas, refPantalla);
+                                        break;
+                                    case "thermalRush":
+                                        v.thermalRush(fichas, refPantalla);
+                                        break;
+                                    default:
+                                        break;
                                 }
                             }
                             refPantalla.refCliente.verificarVivo();
@@ -309,15 +315,19 @@ public class ThreadCliente extends Thread implements Serializable{
                             refPantalla.addMensaje(usuario + " esta atacando a " + receptor + " con : " + mensaje);
                             if(nombre.equals(receptor)){
                                 ArrayList<JLabel> fichas = refPantalla.refCliente.fichas;
-                                    Kraken k = new Kraken("");
-                                if("tentacles".equals(mensaje)){
-                                    k.tentacles(fichas, refPantalla);
-                                }
-                                else if("krakenBreath".equals(mensaje)){
-                                    k.krakenBreath(fichas, refPantalla);
-                                }
-                                else if("releaseTheKraken".equals(mensaje)){
-                                    k.releaseTheKraken(fichas, refPantalla);
+                                    Thunder t = new Thunder("");
+                                if(null != mensaje)switch (mensaje) {
+                                    case "thunderRain":
+                                        t.thunderRain(fichas, refPantalla);
+                                        break;
+                                    case "poseidonThunder":
+                                        t.poseidonThunder(fichas, refPantalla);
+                                        break;
+                                    case "eelAtack":
+                                        t.eelAtack(fichas, refPantalla);
+                                        break;
+                                    default:
+                                        break;
                                 }
                             }
                             refPantalla.refCliente.verificarVivo();
@@ -342,15 +352,19 @@ public class ThreadCliente extends Thread implements Serializable{
                             refPantalla.addMensaje(usuario + " esta atacando a " + receptor + " con : " + mensaje);
                             if(nombre.equals(receptor)){
                                 ArrayList<JLabel> fichas = refPantalla.refCliente.fichas;
-                                    Kraken k = new Kraken("");
-                                if("tentacles".equals(mensaje)){
-                                    k.tentacles(fichas, refPantalla);
-                                }
-                                else if("krakenBreath".equals(mensaje)){
-                                    k.krakenBreath(fichas, refPantalla);
-                                }
-                                else if("releaseTheKraken".equals(mensaje)){
-                                    k.releaseTheKraken(fichas, refPantalla);
+                                    WavesControl w = new WavesControl("");
+                                if(null != mensaje)switch (mensaje) {
+                                    case "swirlRaising":
+                                        w.swirlRaising(fichas, refPantalla);
+                                        break;
+                                    case "sendHumanGarbage":
+                                        w.sendHumanGarbage(fichas, refPantalla);
+                                        break;
+                                    case "radioactiveRush":
+                                        w.radioactiveRush(fichas, refPantalla);
+                                        break;
+                                    default:
+                                        break;
                                 }
                             }
                             refPantalla.refCliente.verificarVivo();
@@ -370,7 +384,9 @@ public class ThreadCliente extends Thread implements Serializable{
                 }
             } catch (IOException ex) {
                
-        }
+        }   catch (InterruptedException ex) {
+                Logger.getLogger(ThreadCliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
     }
     }

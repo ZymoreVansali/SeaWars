@@ -71,7 +71,7 @@ public class Personaje implements Serializable{
             this.ataque = new TheTrident("TheTrident");
         }
         else if("Thunder".equals(ataque)){
-            this.ataque = new Thunder("TheThunder");
+            this.ataque = new Thunder("Thunder");
         }
         else if("Volcanoes".equals(ataque)){
             this.ataque = new Volcanoes("Volcanoes");
