@@ -394,23 +394,13 @@ public class InterfazCliente extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        generalPanel.setLayout(null);
-        generalPanel.add(lblNombreJugador);
-        lblNombreJugador.setBounds(0, 36, 70, 25);
-
         textArea2.setColumns(20);
         textArea2.setRows(5);
         jScrollPane1.setViewportView(textArea2);
 
-        generalPanel.add(jScrollPane1);
-        jScrollPane1.setBounds(10, 472, 198, 137);
-
         commandTextArea.setColumns(20);
         commandTextArea.setRows(5);
         jScrollPane3.setViewportView(commandTextArea);
-
-        generalPanel.add(jScrollPane3);
-        jScrollPane3.setBounds(226, 414, 413, 166);
 
         commandTextField.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -422,8 +412,6 @@ public class InterfazCliente extends javax.swing.JFrame {
                 commandTextFieldKeyPressed(evt);
             }
         });
-        generalPanel.add(commandTextField);
-        commandTextField.setBounds(226, 586, 413, 35);
 
         jButton4.setText("jButton4");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -431,8 +419,6 @@ public class InterfazCliente extends javax.swing.JFrame {
                 jButton4ActionPerformed(evt);
             }
         });
-        generalPanel.add(jButton4);
-        jButton4.setBounds(721, 507, 73, 23);
 
         jButton2.setText("jButton2");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -440,16 +426,8 @@ public class InterfazCliente extends javax.swing.JFrame {
                 jButton2ActionPerformed(evt);
             }
         });
-        generalPanel.add(jButton2);
-        jButton2.setBounds(721, 473, 73, 23);
 
         labelsPanels.setLayout(null);
-        generalPanel.add(labelsPanels);
-        labelsPanels.setBounds(893, 36, 0, 372);
-        generalPanel.add(jPanel1);
-        jPanel1.setBounds(800, 199, 10, 10);
-        generalPanel.add(jPanel2);
-        jPanel2.setBounds(877, 199, 10, 10);
 
         labelsPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -464,17 +442,12 @@ public class InterfazCliente extends javax.swing.JFrame {
             .addGap(0, 398, Short.MAX_VALUE)
         );
 
-        generalPanel.add(labelsPanel);
-        labelsPanel.setBounds(88, 0, 600, 400);
-
         jButton1.setText("jButton1");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        generalPanel.add(jButton1);
-        jButton1.setBounds(721, 433, 73, 23);
 
         jButton3.setText("jButton3");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -482,10 +455,83 @@ public class InterfazCliente extends javax.swing.JFrame {
                 jButton3ActionPerformed(evt);
             }
         });
-        generalPanel.add(jButton3);
-        jButton3.setBounds(721, 404, 73, 23);
-        generalPanel.add(lblFondo);
-        lblFondo.setBounds(0, 0, 960, 630);
+
+        javax.swing.GroupLayout generalPanelLayout = new javax.swing.GroupLayout(generalPanel);
+        generalPanel.setLayout(generalPanelLayout);
+        generalPanelLayout.setHorizontalGroup(
+            generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addGap(88, 88, 88)
+                .addComponent(labelsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(112, 112, 112)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addGap(226, 226, 226)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(82, 82, 82)
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4)))
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addGap(226, 226, 226)
+                .addComponent(commandTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 413, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addGap(721, 721, 721)
+                .addComponent(jButton2))
+            .addComponent(lblNombreJugador, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addGap(721, 721, 721)
+                .addComponent(jButton1))
+            .addComponent(lblFondo, javax.swing.GroupLayout.PREFERRED_SIZE, 960, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addGap(893, 893, 893)
+                .addComponent(labelsPanels, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addGap(877, 877, 877)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        generalPanelLayout.setVerticalGroup(
+            generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(generalPanelLayout.createSequentialGroup()
+                        .addGap(199, 199, 199)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(4, 4, 4)
+                .addGroup(generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(generalPanelLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(generalPanelLayout.createSequentialGroup()
+                        .addComponent(jButton3)
+                        .addGap(80, 80, 80)
+                        .addComponent(jButton4)))
+                .addGap(6, 6, 6)
+                .addComponent(commandTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addGap(473, 473, 473)
+                .addComponent(jButton2))
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addComponent(lblNombreJugador, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addGap(433, 433, 433)
+                .addComponent(jButton1))
+            .addComponent(lblFondo, javax.swing.GroupLayout.PREFERRED_SIZE, 630, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addComponent(labelsPanels, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addGap(472, 472, 472)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(generalPanelLayout.createSequentialGroup()
+                .addGap(199, 199, 199)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
