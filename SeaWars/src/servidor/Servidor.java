@@ -31,7 +31,7 @@ public class Servidor extends Thread implements Serializable{
     public Servidor partidaGuardada;
     private int contFichas = 0;
     private boolean turnosDecididos = false;
-    private ArrayList<String> nombreOrder;
+    public ArrayList<String> nombreOrder;
     private ArrayList<String> listaPerdedores;
     int cantidadJugadores;
     

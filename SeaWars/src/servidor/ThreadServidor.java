@@ -195,6 +195,33 @@ public class ThreadServidor extends Thread implements Serializable {
                             current.writer.writeUTF(mensaje);
                         }
                     break;
+                    case 12: // Verificar estado de jugador
+                        atacante = reader.readUTF();
+                        atacado = reader.readUTF();
+                        for (int i = 0; i < server.conexiones.size(); i++) {
+                            ThreadServidor current = server.conexiones.get(i);
+                            current.writer.writeInt(12);
+                            current.writer.writeUTF(atacante);
+                            current.writer.writeUTF(atacado);
+                        }
+                    break;
+                    case 13: // Verificar estado de jugador
+                        atacante = reader.readUTF();
+                        atacado = reader.readUTF();
+                        mensaje = reader.readUTF();
+                        for (int i = 0; i < server.conexiones.size(); i++) {
+                            ThreadServidor current = server.conexiones.get(i);
+                            current.writer.writeInt(13);
+                            current.writer.writeUTF(atacante);
+                            current.writer.writeUTF(atacado);
+                            current.writer.writeUTF(mensaje);
+                        }
+                    break;
+                    case 14: // Verificar estado de jugador
+                        String turnoActual = reader.readUTF();  // Para cambiar de turno
+                        this.server.proximoTurno(turnoActual);
+                        
+                    break;
                 }
                 
                 

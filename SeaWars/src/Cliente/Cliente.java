@@ -25,7 +25,7 @@ public class Cliente implements Serializable{
     transient Socket socketRef;
     InterfazCliente refPantalla;
     public ThreadCliente hiloCliente;
-    ArrayList<Personaje> personajes;
+    public ArrayList<Personaje> personajes;
     public ArrayList<JLabel> fichas = new ArrayList<>();
     public boolean vivo = true;
     public boolean controlKraken = false;
@@ -35,6 +35,7 @@ public class Cliente implements Serializable{
     public ArrayList<Integer> cantRemo = new ArrayList<>();
     public ArrayList<JLabel> casillasRadioactivas = new ArrayList<>();
     public String bitacora = "";
+    public String ultimoAtaque = "";
 
     public Socket getSocketRef() {
         return socketRef;
@@ -375,7 +376,9 @@ public class Cliente implements Serializable{
         nuevo.setAtaque(separado[6]);
         nuevo.setPorcentaje(Integer.parseInt(separado[7]));
         personajes.add(nuevo);
-
+        if(personajes.size() == 3){
+            refPantalla.crearPantalla();
+        }
 
         return "Personaje creado correctamente";
     }

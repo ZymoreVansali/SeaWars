@@ -207,7 +207,6 @@ public class FishTelephaty extends Ataques{
                     break;
                     
                 case 3:
-                    System.out.println();
                     x=19;
                     y=29;
                     cant = random.nextInt(10);

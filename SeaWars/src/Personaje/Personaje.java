@@ -23,7 +23,7 @@ import javax.swing.JLabel;
  */
 public class Personaje implements Serializable{
     private String nombre = "";
-    private String imagen = "";
+    public String imagen = "";
     private double porcentaje = 0.0;
     public Ataques ataque;
     private int poder = 0;
@@ -119,6 +119,16 @@ public class Personaje implements Serializable{
             }
         }
         this.vivo = false;
+    }
+    
+    public int casillasMuertas(){
+        int cont = 0;
+        for(int i = 0;i < fichas.size();i++){
+            if("0".equals(fichas.get(i).getText())){
+                cont++;
+            }
+        }
+        return cont;
     }
     
 }

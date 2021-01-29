@@ -17,7 +17,8 @@ import servidor.FileManager;
  * @author Usuario
  */
 public abstract class Ataques implements Serializable{
-    String nombre;
+    public String nombre;
+    
 
     public Ataques(String nombre) {
         this.nombre = nombre;
@@ -47,6 +48,7 @@ public abstract class Ataques implements Serializable{
     
     
     public int dannarFichas(InterfazCliente refPantalla, JLabel lbl, int danno){
+        
         int vida = 100;
         String bitacora = "";
         for(int j = 0;j < 20;j++){
@@ -70,6 +72,7 @@ public abstract class Ataques implements Serializable{
                             
                         }
                         refPantalla.refCliente.bitacora += bitacora;
+                        refPantalla.refCliente.ultimoAtaque += bitacora;
                         return Integer.parseInt(refPantalla.labelMatrix[j][c].getText());
                     }
                 }

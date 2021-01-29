@@ -158,6 +158,7 @@ public class ThreadCliente extends Thread implements Serializable{
                                 if(nombre.equals(receptor)){
                                     ArrayList<JLabel> fichas = refPantalla.refCliente.fichas;
                                         Kraken k = new Kraken("");
+                                    refPantalla.refCliente.ultimoAtaque = "";
                                     if(null != mensaje)switch (mensaje) {
                                         case "tentacles":
                                             k.tentacles(fichas, refPantalla);
@@ -172,6 +173,7 @@ public class ThreadCliente extends Thread implements Serializable{
                                             break;
                                     }
                                 }
+                                refPantalla.verificarLabels();
                                 refPantalla.refCliente.verificarVivo();
                                 if(refPantalla.refCliente.vivo == false){
                                     refPantalla.perder();
@@ -204,6 +206,7 @@ public class ThreadCliente extends Thread implements Serializable{
                             if(nombre.equals(receptor)){
                                 ArrayList<JLabel> fichas = refPantalla.refCliente.fichas;
                                     TheTrident t = new TheTrident("");
+                                    refPantalla.refCliente.ultimoAtaque = "";
                                 if(null != mensaje)switch (mensaje) {
                                     case "threeLines":
                                         t.threeLines(fichas, refPantalla);
@@ -219,6 +222,7 @@ public class ThreadCliente extends Thread implements Serializable{
                                         break;
                                 }
                             }
+                            refPantalla.verificarLabels();
                             refPantalla.refCliente.verificarVivo();
                             if(refPantalla.refCliente.vivo == false){
                                 refPantalla.perder();
@@ -242,6 +246,7 @@ public class ThreadCliente extends Thread implements Serializable{
                             if(nombre.equals(receptor)){
                                 ArrayList<JLabel> fichas = refPantalla.refCliente.fichas;
                                     FishTelephaty f = new FishTelephaty("");
+                                refPantalla.refCliente.ultimoAtaque = "";
                                 if(null != mensaje)switch (mensaje) {
                                     case "cardumen":
                                         f.cardumen(fichas, refPantalla);
@@ -256,6 +261,7 @@ public class ThreadCliente extends Thread implements Serializable{
                                         break;
                                 }
                             }
+                            refPantalla.verificarLabels();
                             refPantalla.refCliente.verificarVivo();
                             if(refPantalla.refCliente.vivo == false){
                                 refPantalla.perder();
@@ -279,6 +285,7 @@ public class ThreadCliente extends Thread implements Serializable{
                             if(nombre.equals(receptor)){
                                 ArrayList<JLabel> fichas = refPantalla.refCliente.fichas;
                                     Volcanoes v = new Volcanoes("");
+                                refPantalla.refCliente.ultimoAtaque = "";
                                 if(null != mensaje)switch (mensaje) {
                                     case "volcanoRaising":
                                         v.volcanoRaising(fichas, refPantalla);
@@ -293,6 +300,7 @@ public class ThreadCliente extends Thread implements Serializable{
                                         break;
                                 }
                             }
+                            refPantalla.verificarLabels();
                             refPantalla.refCliente.verificarVivo();
                             if(refPantalla.refCliente.vivo == false){
                                 refPantalla.perder();
@@ -316,6 +324,7 @@ public class ThreadCliente extends Thread implements Serializable{
                             if(nombre.equals(receptor)){
                                 ArrayList<JLabel> fichas = refPantalla.refCliente.fichas;
                                     Thunder t = new Thunder("");
+                                refPantalla.refCliente.ultimoAtaque = "";
                                 if(null != mensaje)switch (mensaje) {
                                     case "thunderRain":
                                         t.thunderRain(fichas, refPantalla);
@@ -330,6 +339,7 @@ public class ThreadCliente extends Thread implements Serializable{
                                         break;
                                 }
                             }
+                            refPantalla.verificarLabels();
                             refPantalla.refCliente.verificarVivo();
                             if(refPantalla.refCliente.vivo == false){
                                 refPantalla.perder();
@@ -353,6 +363,7 @@ public class ThreadCliente extends Thread implements Serializable{
                             if(nombre.equals(receptor)){
                                 ArrayList<JLabel> fichas = refPantalla.refCliente.fichas;
                                     WavesControl w = new WavesControl("");
+                                refPantalla.refCliente.ultimoAtaque = "";
                                 if(null != mensaje)switch (mensaje) {
                                     case "swirlRaising":
                                         w.swirlRaising(fichas, refPantalla);
@@ -367,6 +378,7 @@ public class ThreadCliente extends Thread implements Serializable{
                                         break;
                                 }
                             }
+                            refPantalla.verificarLabels();
                             refPantalla.refCliente.verificarVivo();
                             if(refPantalla.refCliente.vivo == false){
                                 refPantalla.perder();
@@ -381,6 +393,21 @@ public class ThreadCliente extends Thread implements Serializable{
                             refPantalla.refCliente.hiloCliente.writer.writeUTF("El jugador "+usuario+" pide dejar de ser atacado por "+ receptor+" ya que ya esta muerto, asi que por abuson pierdes  tu turno :3");
                         }
                         break;
+                        case 12:
+                            usuario = reader.readUTF();
+                            receptor = reader.readUTF();
+                            if(nombre.equals(receptor)){
+                                refPantalla.enviarStatus(usuario);
+                            }
+                            break;
+                        case 13:
+                            usuario = reader.readUTF();
+                            receptor = reader.readUTF();
+                            mensaje = reader.readUTF();
+                            if(nombre.equals(receptor)){
+                                refPantalla.addMensaje("Estas son las casillas de: "+usuario+"\n"+mensaje);
+                            }
+                            break;
                 }
             } catch (IOException ex) {
                
